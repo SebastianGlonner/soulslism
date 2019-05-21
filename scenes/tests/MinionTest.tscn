@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/tests/MinionTest.cs" type="Script" id=1]
+[ext_resource path="res://scenes/Minion.tscn" type="PackedScene" id=2]
+
+[node name="Root" type="Node" index="0"]
+
+script = ExtResource( 1 )
+
+[node name="Minion" parent="." index="0" instance=ExtResource( 2 )]
+
+transform = Transform( 0.0493392, 0, 0.998782, 0, 1, 0, -0.998782, 0, 0.0493392, 0, 0, 0 )
+
+[node name="Camera" type="Camera" parent="." index="1"]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.53158, 9.47663 )
+keep_aspect = 1
+cull_mask = 1048575
+environment = null
+h_offset = 0.0
+v_offset = 0.0
+doppler_tracking = 0
+projection = 0
+current = false
+fov = 70.0
+size = 1.0
+near = 0.05
+far = 100.0
+
+
