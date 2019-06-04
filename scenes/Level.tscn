@@ -34,11 +34,9 @@ shadow_color = Color( 0.230469, 0.230469, 0.230469, 1 )
 [node name="Navigation" type="Navigation" parent="."]
 
 [node name="NavigationMeshInstance" type="NavigationMeshInstance" parent="Navigation"]
-editor/display_folded = true
 navmesh = SubResource( 1 )
 
 [node name="Ground" type="StaticBody" parent="Navigation/NavigationMeshInstance"]
-editor/display_folded = true
 transform = Transform( 160, 0, 0, 0, 0.1, 0, 0, 0, 50, 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/Ground"]

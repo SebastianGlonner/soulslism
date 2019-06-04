@@ -38,6 +38,11 @@ public class Actor : KinematicBody
 
     private EventManaged<Actor> targetDyingManagedEvent = new EventManaged<Actor>();
 
+    public Soulslism.Faction GetActorFaction()
+    {
+        return faction;
+    }
+
     public override void _Ready()
     {
         SetNotifyTransform(true);

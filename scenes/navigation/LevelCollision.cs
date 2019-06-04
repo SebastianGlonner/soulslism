@@ -32,7 +32,8 @@ public class LevelCollision : Spatial
 
         int countPerSide = 50;
 
-        DeployMany(DeployMinion, countPerSide, new Vector3(-80, 0, 0), false);
+        // DeployMany(DeployMinion, 1, new Vector3(-23, 0, 0), true);
+        DeployMany(DeployMinion, 1, new Vector3(-43, 0, 0), true);
 
         //DeployMinion(new Vector3(-55, 0, 0));
         //DeployMinion(new Vector3(-54, 0, 0));
@@ -42,13 +43,13 @@ public class LevelCollision : Spatial
         //    DeployMinion(new Vector3(-55, 0, i));
         //}
 
-        DeployMinion(new Vector3(-9, 0, -5), false);
-        DeployMinion(new Vector3(-9, 0, -7), false);
+        // DeployMinion(new Vector3(-9, 0, -5), false);
+        DeployMinion(new Vector3(-9, 0, 0), false);
 
         DeployMany(DeployEnemy, countPerSide, new Vector3(50, 0, 0), false);
     }
 
-    private void DeployMany(Action<Vector3, bool> which, int count, Vector3 at, bool drawPath = false)
+    private void DeployMany(Action<Vector3, bool, bool> which, int count, Vector3 at, bool drawPath = false)
     {
         float gap = .5f;
         int perLine = 10;
@@ -65,7 +66,7 @@ public class LevelCollision : Spatial
                 dir * line
             );
 
-            which(pos, true);
+            which(pos, true, drawPath);
 
             line++;
             if ( line > perLine )
@@ -76,7 +77,7 @@ public class LevelCollision : Spatial
         }
     }
 
-    private void DeployMinion(Vector3 at, bool withTarget)
+    private void DeployMinion(Vector3 at, bool withTarget, bool drawPath = false)
     {
         Actor player = minionScene.Instance() as Actor;
         AddChild(player);
@@ -85,7 +86,7 @@ public class LevelCollision : Spatial
         player.SetTotalLife(15);
 
         ImmediateGeometry draw = null;
-        if ( false )
+        if (drawPath)
         {
             draw = new ImmediateGeometry();
             draw.SetMaterialOverride(drawPathMaterial);
@@ -99,7 +100,7 @@ public class LevelCollision : Spatial
 
     }
 
-    private void DeployEnemy(Vector3 pos, bool withTarget)
+    private void DeployEnemy(Vector3 pos, bool withTarget, bool drawPath = false)
     {
         Actor actor = minionScene.Instance() as Actor;
         AddChild(actor);
