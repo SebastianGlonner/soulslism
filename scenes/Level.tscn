@@ -114,3 +114,18 @@ script = ExtResource( 4 )
 
 [node name="EnemyCastle" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 82.0933, 0, 0 )
+
+[node name="Button" type="Button" parent="."]
+margin_left = 781.0
+margin_top = 19.0
+margin_right = 986.0
+margin_bottom = 82.0
+text = "Button"
+
+[node name="Label" type="Label" parent="."]
+margin_left = 793.0
+margin_top = 92.0
+margin_right = 977.0
+margin_bottom = 158.0
+text = "HIer haben wir text?"
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

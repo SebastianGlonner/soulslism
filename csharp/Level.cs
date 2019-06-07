@@ -48,6 +48,18 @@ public class Level : Spatial
         levelHelper.DeployMany(levelHelper.DeployEnemy, countPerSide, new Vector3(30, 0, 0), false);
     }
 
+    public void _on_Button_pressed() {
+        NativeScript lib = (NativeScript)ResourceLoader.Load("res://gdnative/navAgent/bin/simple.gdns");
+        Godot.Object libInstance = lib.New();
+
+        GD.Print("test");
+        GD.Print(libInstance.GetClass());
+
+        Label lbl = this.GetNode("/root/Level/Label") as Label;
+        lbl.Text = (String)libInstance.Call("get_data");
+
+    }
+
     //public override void _Input(InputEvent @event)
     //{
     //    if (@event is InputEventMouseButton)
