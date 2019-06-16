@@ -1,21 +1,39 @@
 using System;
 using Godot;
+using SoulslismCSharp;
 
 public class Level : Spatial
 {
-
-    private Camera camera;
-
-    private Navigation navigationNode;
-
-    private PackedScene minionScene;
-    private Actor enemyCastle;
-
-    private bool draw_path = true;
-
-    private SpatialMaterial drawPathMaterial;
+    private LevelHelper levelHelper;
+    private CameraController cameraController;
 
     public override void _Ready()
+    {
+        this.levelHelper = new LevelHelper();
+        levelHelper.SetUp(this);
+
+        cameraController = new CameraController(
+            levelHelper.getPlayerCamera(),
+            levelHelper.getPlayerCameraRotationHelperX()
+        );
+
+        setUpSmall();
+    }
+
+    private void setUpSmall()
+    {
+        SetProcessInput(true);
+
+        int countPerSide = 1;
+
+        Boolean drawPathVectors = true;
+
+        levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-50, 0, 0), drawPathVectors);
+        levelHelper.DeployMany(levelHelper.DeployEnemy, countPerSide, new Vector3(30, 0, 0), drawPathVectors);
+
+    }
+
+    private void setUpHuge()
     {
         LevelHelper levelHelper = new LevelHelper();
         levelHelper.SetUp(this);
@@ -24,7 +42,9 @@ public class Level : Spatial
 
         int countPerSide = 50;
 
-        levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-50, 0, 0), false);
+        Boolean drawPathVectors = true;
+
+        levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-50, 0, 0), drawPathVectors);
 
         //DeployMinion(new Vector3(-55, 0, 0));
         //DeployMinion(new Vector3(-54, 0, 0));
@@ -45,34 +65,15 @@ public class Level : Spatial
         levelHelper.DeployEnemy(new Vector3(-5, 0, 16));
         levelHelper.DeployEnemy(new Vector3(-5, 0, 22));
 
-        levelHelper.DeployMany(levelHelper.DeployEnemy, countPerSide, new Vector3(30, 0, 0), false);
+        levelHelper.DeployMany(levelHelper.DeployEnemy, 100, new Vector3(30, 0, 0), drawPathVectors);
+
+        levelHelper.DeployMany(levelHelper.DeployEnemy, 100, new Vector3(-100, 0, 0), drawPathVectors);
+        levelHelper.DeployMany(levelHelper.DeployEnemy, 100, new Vector3(90, 0, 0), drawPathVectors);
+
     }
-
-    //public override void _Input(InputEvent @event)
-    //{
-    //    if (@event is InputEventMouseButton)
-    //    {
-    //        InputEventMouseButton mouseEvent = (InputEventMouseButton)@event;
-    //        if (mouseEvent.ButtonIndex == 1 && mouseEvent.Pressed)
-    //        {
-    //            Vector3 from = camera.ProjectRayOrigin(mouseEvent.Position);
-    //            Vector3 to = from + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
-
-    //            PhysicsDirectSpaceState spaceStace = GetWorld().DirectSpaceState;
-
-    //            object collision;
-    //            Dictionary colliding = spaceStace.IntersectRay(from, to);
-    //            if ( colliding.TryGetValue("position", out collision) )
-    //            {
-    //                Logging.Log("Update Target on click:");
-    //                Logging.Log(colliding);
-    //                player.AddTarget(new AiTarget((Vector3) collision, 9));
-
-    //            }
-
-    //        }
-    //    }
-    //}
-
+    public override void _Input(InputEvent @event)
+    {
+        this.cameraController._input(@event);
+    }
 }
 

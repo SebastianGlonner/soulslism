@@ -3,9 +3,8 @@ using Godot;
 
 public class LevelHelper
 {
-
     private Camera camera;
-
+    private Spatial cameraRotationHelperX;
     private Navigation navigationNode;
 
     private PackedScene minionScene;
@@ -28,15 +27,38 @@ public class LevelHelper
 
         minionScene = (PackedScene)ResourceLoader.Load("res://scenes/Actor.tscn");
 
-        camera = node.GetNode("/root/Level/Camera") as Camera;
+        cameraRotationHelperX = node.GetNode("/root/Level/CameraRotationHelper") as Spatial;
+        camera = cameraRotationHelperX.GetNode("Camera") as Camera;
+
+        // setup initial camera position
+        cameraRotationHelperX.RotateX(Mathf.Deg2Rad(-40));
+        Vector3 camerInitialPosition = new Vector3();
+        camerInitialPosition.y = 16;
+        camerInitialPosition.z = 40;
+        cameraRotationHelperX.GlobalTranslate(camerInitialPosition);
+
+        Transform cameraTransform = camera.GetTransform();
+        cameraTransform.origin = Vector3.Zero;
+        camera.SetTransform(cameraTransform);
+
         enemyCastle = node.GetNode("EnemyCastle") as Actor;
         enemyCastle.SetTotalLife(60000);
+        enemyCastle.Faction = Soulslism.Faction.Enemy;
         navigationNode = node.GetNode("Navigation") as Navigation;
+    }
+
+    public Camera getPlayerCamera()
+    {
+        return this.camera;
+    }
+
+    public Spatial getPlayerCameraRotationHelperX() {
+        return this.cameraRotationHelperX;
     }
 
     public void DeployMany(Action<Vector3, bool, bool> which, int count, Vector3 at, bool drawPath = false)
     {
-        float gap = 2f;
+        float gap = 2.5f;
         int perLine = 10;
         int row = 0;
         int line = 0;

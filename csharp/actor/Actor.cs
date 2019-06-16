@@ -147,6 +147,7 @@ public class Actor : KinematicBody
         }
         else
         {
+
             this.currentTarget = newTarget;
             this.currentDestination = newTarget.GetTarget().GetGlobalTransform().origin;
             //this.otherAi = newTarget.Target;

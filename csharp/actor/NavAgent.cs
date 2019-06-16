@@ -67,7 +67,8 @@ public class NavAgent
 
             int pathLength = path.Length;
 
-            Vector3 actorOrigin = actor.GetGlobalTransform().origin;
+            Transform actorTransform = actor.GetGlobalTransform();
+            Vector3 actorOrigin = actorTransform.origin;
 
             //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
             //if ( remainingDistance < 0 )
@@ -100,36 +101,46 @@ public class NavAgent
             Vector3 directedVelocity = desiredVelocity - actorVelocity;
             actor.LookAt(actorOrigin + directedVelocity, upVector);
 
-            float testDelta = 0.1f;
+            float testDelta = 1f;
 
             drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * testDelta);
 
-            actor.MoveAndSlide(
-                    directedVelocity,
-                    upVector,
-                    true,
-                    1,
-                    0.78f,
-                    false
+            bool wouldCollide = actor.TestMove(
+                actorTransform,
+                directedVelocity * delta,
+                false
                 );
 
-            // int collisionCount = actor.GetSlideCount();
-            
-            if ( actor.GetSlideCount() > 0 )
+            if (wouldCollide == false)
             {
-                KinematicCollision collided = actor.GetSlideCollision(0);
-                if (collided != null )
+                actor.MoveAndSlide(
+                        directedVelocity,
+                        upVector,
+                        true,
+                        1,
+                        0.78f,
+                        false
+                    );
+
+                // int collisionCount = actor.GetSlideCount();
+
+                if (false && actor.GetSlideCount() > 0)
                 {
-                    Godot.Object collidedObject = collided.GetCollider();
-                    if (collidedObject is Actor) {
-                        Actor collidedActor = collidedObject as Actor;
-                        if (collidedActor.GetActorFaction() == (actor as Actor).GetActorFaction())
+                    KinematicCollision collided = actor.GetSlideCollision(0);
+                    if (collided != null)
+                    {
+                        Godot.Object collidedObject = collided.GetCollider();
+                        if (collidedObject is Actor)
                         {
-                            stopMovement = .2f;
+                            Actor collidedActor = collidedObject as Actor;
+                            if (collidedActor.GetActorFaction() == (actor as Actor).GetActorFaction())
+                            {
+                                stopMovement = .2f;
+                            }
                         }
                     }
+                    // Logging.Log("" + (collided.GetCollider() is Actor));
                 }
-                // Logging.Log("" + (collided.GetCollider() is Actor));
             }
         } else
         {
