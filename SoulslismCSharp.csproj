@@ -53,7 +53,10 @@
     <Compile Include="csharp\actor\ActorManager.cs" />
     <Compile Include="csharp\actor\Faction.cs" />
     <Compile Include="csharp\actor\LifeLine.cs" />
-    <Compile Include="csharp\CameraController.cs" />
+    <Compile Include="csharp\input\GameController.cs" />
+    <Compile Include="csharp\input\InputAction.cs" />
+    <Compile Include="csharp\input\InputState.cs" />
+    <Compile Include="csharp\input\InputStateMachine.cs" />
     <Compile Include="csharp\MaterialsManager.cs" />
     <Compile Include="csharp\actor\AiActionCollection.cs" />
     <Compile Include="csharp\actor\AiTarget.cs" />

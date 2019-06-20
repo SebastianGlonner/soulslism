@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
-namespace SoulslismCSharp
+namespace Soulslism
 {
 
-    class CameraController
+    public class GameController
     {
         private float mouseSpeed = 0.25f;
 
@@ -26,51 +26,100 @@ namespace SoulslismCSharp
         private Boolean dragging;
         private Boolean rotating;
 
-        public CameraController(Camera camera, Spatial rotationHelperX)
+        private InputStateMachine machine;
+
+        public GameController(Camera camera, Spatial rotationHelperX)
         {
             this.camera = camera;
             this.rotationHelperX = rotationHelperX;
 
+            machine = new InputStateMachine(camera, rotationHelperX);
         }
 
         public void _input(InputEvent @event)
         {
+            InputAction action = InputAction.IDLE;
+            if (@event is InputEventMouseButton) {
 
+                int buttonIndex = ((InputEventMouseButton) @event).ButtonIndex;
+                if ( buttonIndex == (int)ButtonList.Left)
+                {
+                    action = InputAction.POINT_LEFT;
+                } 
+                else if (buttonIndex == (int)ButtonList.WheelDown)
+                {
+                    action = InputAction.ZOOM_OUT;
+                } 
+                else if (buttonIndex == (int)ButtonList.WheelUp)
+                {
+                    action = InputAction.ZOOM_IN;
+                } 
+                else if (buttonIndex == (int)ButtonList.Right) 
+                {
+                    action = InputAction.POINT_RIGHT;
+                }
+
+            } else if (@event is InputEventMouseMotion ) 
+            {
+                action = InputAction.POINT_MOVE;
+            }
+            
+            if ( action != InputAction.IDLE )
+                machine.processInput(action, @event);
+
+        }
+        public void _input2(InputEvent @event)
+        {
             Boolean doMove = false;
             moveCamera.x = 0;
             moveCamera.y = 0;
             moveCamera.z = 0;
+            
+            if (@event is InputEventMouseButton)
+            {
+                InputEventMouseButton mouseEvent = (InputEventMouseButton)@event;
+                if ( mouseEvent.ButtonIndex == (int)ButtonList.Left)
+                {
+                    if ( !mouseEvent.Pressed ) {
+                        Vector3 rayFrom = camera.ProjectRayOrigin(mouseEvent.Position);
+                        Vector3 rayTo = rayFrom + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
-           if (@event is InputEventMouseButton)
-           {
-               InputEventMouseButton mouseEvent = (InputEventMouseButton)@event;
-               if ( !rotating && mouseEvent.ButtonIndex == (int)ButtonList.Left)
-               {
-                    if ( !dragging && mouseEvent.Pressed ) {
-                        dragging = true;
-                    } else if ( dragging && !mouseEvent.Pressed) {
-                        dragging = false;
+                        Godot.Collections.Dictionary selection = camera.GetWorld().DirectSpaceState.IntersectRay(rayFrom, rayTo);
+
+                        object collided = null;
+                        if ( selection.TryGetValue("collider", out collided) ) {
+                            GD.Print(collided);
+                        }
+                    }
+                    
+                    if ( !rotating )
+                    {
+                        if ( !dragging && mouseEvent.Pressed ) {
+                            dragging = true;
+                        } else if ( dragging && !mouseEvent.Pressed) {
+                            dragging = false;
+                        }
                     }
 
-               } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelDown)
-               {
+                } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelDown)
+                {
                     moveCamera.y = zoomSpeed * -1;
                     doMove = true;
 
-               } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelUp)
-               {
+                } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelUp)
+                {
                     moveCamera.y = zoomSpeed;
                     doMove = true;
 
-               } else if ( !dragging && mouseEvent.ButtonIndex == (int)ButtonList.Right ) {
+                } else if ( !dragging && mouseEvent.ButtonIndex == (int)ButtonList.Right ) {
                     if ( !rotating && mouseEvent.Pressed ) {
                         rotating = true;
                     } else if ( rotating && !mouseEvent.Pressed) {
                         rotating = false;
                     }
 
-               }
-           } else if (@event is InputEventMouseMotion && (dragging || rotating) ) {
+                }
+            } else if (@event is InputEventMouseMotion && (dragging || rotating) ) {
                 Vector2 mouseRelative = ((InputEventMouseMotion)@event).Relative;
                 moveCamera.x = mouseRelative.x;
                 moveCamera.z = mouseRelative.y;
@@ -81,24 +130,11 @@ namespace SoulslismCSharp
             if ( rotating ) {
                 rotationHelperX.RotateX(Mathf.Deg2Rad(moveCamera.z * mouseSpeed * -1));
                 Orthonormalize(rotationHelperX);
-                // camera.RotateY(Mathf.Deg2Rad(moveCamera.x * mouseSpeed));
-                // Orthonormalize(camera);                
-
-
-        // rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY))
-        // self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
-
-        // var camera_rot = rotation_helper.rotation_degrees
-        // camera_rot.x = clamp(camera_rot.x, -70, 70)
-        // rotation_helper.rotation_degrees = camera_rot
-
             }
             
             if ( dragging || doMove ) {
                 rotationHelperX.GlobalTranslate(moveCamera * dragDirection * dragSpeed);
             }
-
-        
 
         }
 

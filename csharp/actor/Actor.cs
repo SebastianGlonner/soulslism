@@ -92,21 +92,16 @@ public class Actor : KinematicBody
 
     public override void _Process(float delta)
     {
+        if (agent == null)
+            return;
+
         if ( nextAttack > 0 )
             nextAttack -= delta;
-
-        if ( agent != null )
+        else if ( nextAttack <= 0 && physicsTargetRemainingDistance <= attackRange )
         {
-            if (physicsTargetRemainingDistance <= attackRange )
-            {
-                // target is in range
-                if ( nextAttack <= 0 )
-                {
-                    Actor other = agent.GetDestination();
-                    if (other != null)
-                        AttackTarget(other);
-                }
-            }
+            Actor other = agent.GetDestination();
+            if (other != null)
+                AttackTarget(other);
         }
 
     }
@@ -260,51 +255,4 @@ public class Actor : KinematicBody
             parent.RemoveChild(this);
         QueueFree();
     }
-
-
-    /*******************************************
-     * 
-     * checkout afterwards
-     * 
-     * *****************************************/
-     
-    // Update is called once per frame
-    void Update(float delta)
-    {
-
-        if (ActorManager.actorsPaused)
-        {
-            if (isActing)
-            {
-                // agent.isStopped = true;
-            }
-
-            isActing = false;
-            return;
-        }
-        else
-        {
-            // agent.isStopped = false;
-            isActing = true;
-        }
-
-        // Debug.Log(agent.hasPath);
-
-
-        if (currentDestination != null)
-        {
-            // agent.SetDestination(currentDestination);
-
-            //if (agent.pathStatus == NavMeshPathStatus.PathComplete && agent.remainingDistance <= Properties.CLOSE_RANGED_DISTANCE)
-            //{
-            //    AttackTarget();
-            //}
-        }
-    }
-
-    /*******************************
-     * 
-     * old functions
-     * 
-     * ****************************/
 }

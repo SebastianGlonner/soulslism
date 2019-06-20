@@ -38,6 +38,7 @@ public class NavAgent
     private ImmediateGeometry draw;
 
     private Vector3 upVector = new Vector3(0, 1, 0);
+    private float bodySize;
 
     public NavAgent(Navigation navigationNode, KinematicBody actor, ImmediateGeometry draw = null)
     {
@@ -45,6 +46,9 @@ public class NavAgent
         this.draw = draw;
 
         this.navigationNode = navigationNode;
+        
+        bodySize = 1f;
+
     }
 
     public float Process(float delta)
@@ -101,12 +105,14 @@ public class NavAgent
             Vector3 directedVelocity = desiredVelocity - actorVelocity;
             actor.LookAt(actorOrigin + directedVelocity, upVector);
 
-            float testDelta = 1f;
 
-            drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * testDelta);
+            Transform testMoveTransform = actorTransform;
+            testMoveTransform.origin += directedVelocity.Normalized();
 
+            drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * delta);
+            
             bool wouldCollide = actor.TestMove(
-                actorTransform,
+                testMoveTransform,
                 directedVelocity * delta,
                 false
                 );

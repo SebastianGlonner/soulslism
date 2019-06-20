@@ -1,18 +1,18 @@
 using System;
 using Godot;
-using SoulslismCSharp;
+using Soulslism;
 
 public class Level : Spatial
 {
     private LevelHelper levelHelper;
-    private CameraController cameraController;
+    private GameController cameraController;
 
     public override void _Ready()
     {
         this.levelHelper = new LevelHelper();
         levelHelper.SetUp(this);
 
-        cameraController = new CameraController(
+        cameraController = new GameController(
             levelHelper.getPlayerCamera(),
             levelHelper.getPlayerCameraRotationHelperX()
         );
@@ -74,6 +74,11 @@ public class Level : Spatial
     public override void _Input(InputEvent @event)
     {
         this.cameraController._input(@event);
+    }
+
+    private void _on_EnemyCastle_input_event(Node camera, InputEvent @event, Vector3 click_position, Vector3 click_normal, int shape_idx) {
+        if ( @event is InputEventMouseButton )
+            GD.Print("clicked enemy castel");  
     }
 }
 

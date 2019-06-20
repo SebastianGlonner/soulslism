@@ -31,9 +31,9 @@ public class LevelHelper
         camera = cameraRotationHelperX.GetNode("Camera") as Camera;
 
         // setup initial camera position
-        cameraRotationHelperX.RotateX(Mathf.Deg2Rad(-40));
+        cameraRotationHelperX.RotateX(Mathf.Deg2Rad(-65));
         Vector3 camerInitialPosition = new Vector3();
-        camerInitialPosition.y = 16;
+        camerInitialPosition.y = 70;
         camerInitialPosition.z = 40;
         cameraRotationHelperX.GlobalTranslate(camerInitialPosition);
 
@@ -87,6 +87,8 @@ public class LevelHelper
     public void DeployMinion(Vector3 at, bool withTarget = false, bool drawPath = false)
     {
         Actor player = minionScene.Instance() as Actor;
+        player.SetProcess(false);
+        player.SetPhysicsProcess(false);
         this.rootNode.AddChild(player);
 
         player.GlobalTranslate(at);
@@ -108,6 +110,8 @@ public class LevelHelper
     public void DeployEnemy(Vector3 pos, bool withTarget = false, bool drawPath = false)
     {
         Actor actor = minionScene.Instance() as Actor;
+        actor.SetProcess(false);
+        actor.SetPhysicsProcess(false);
         this.rootNode.AddChild(actor);
         actor.Faction = Soulslism.Faction.Enemy;
 
