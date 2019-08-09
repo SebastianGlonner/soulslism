@@ -1,0 +1,18 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=false
+
+[entry]
+
+OSX.64="res://scripts/navagent/bin/osx/navagent.dylib"
+Windows.64="res://scripts/navagent/bin/win64/navagent.dll"
+X11.64="res://scripts/navagent/x11/navagent.so"
+
+[dependencies]
+
+OSX.64=[  ]
+Windows.64=[  ]
+X11.64=[  ]
