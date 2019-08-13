@@ -1,6 +1,7 @@
 #include "navagent.h"
 
 using namespace godot;
+using namespace Soulslism;
 
 void NavAgent::_register_methods() {
     register_method("_process", &NavAgent::_process);

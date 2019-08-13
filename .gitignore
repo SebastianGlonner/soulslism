@@ -12,5 +12,9 @@ zconf.h.included
 *.lib
 *.obj
 *.TMP
+*.pdb
+*.pyc
+*.ilk
 logs
 Thumbs.db
+.idea

@@ -4,27 +4,29 @@
 #include <Godot.hpp>
 #include <Spatial.hpp>
 
-namespace godot {
+namespace Soulslism {
 
-class NavAgent : public Spatial {
-	GODOT_CLASS(NavAgent, Spatial)
+    using godot::Spatial;
 
-private:
-    float time_passed;
-    float time_emit;
-    float amplitude;
-    float speed;
+    class NavAgent : public Spatial {
+        GODOT_CLASS(NavAgent, Spatial)
 
-public:
-	static void _register_methods();
+    private:
+        float time_passed;
+        float time_emit;
+        float amplitude;
+        float speed;
 
-	NavAgent();
-	~NavAgent();
+    public:
+        static void _register_methods();
 
-	void _init(); // our initializer called by Godot
+        NavAgent();
+        ~NavAgent();
 
-	void _process(float delta);
-};
+        void _init(); // our initializer called by Godot
+
+        void _process(float delta);
+    };
 
 }
 

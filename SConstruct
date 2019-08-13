@@ -1,5 +1,6 @@
 #!python
-import os, subprocess
+import os, subprocess, sys
+
 
 
 def add_sources(sources, dir, extension):
@@ -9,15 +10,27 @@ def add_sources(sources, dir, extension):
 
 opts = Variables([], ARGUMENTS)
 
-# Gets the standard flags CC, CCX, etc.
-env = DefaultEnvironment()
-
 # Define our options
+opts.Add(EnumVariable('bits', "Target platform bits", 'default', ('default', '32', '64')))
 opts.Add(EnumVariable('target', "Compilation target", 'debug', ['d', 'debug', 'r', 'release']))
 opts.Add(EnumVariable('platform', "Compilation platform", 'windows', ['', 'windows', 'x11', 'linux', 'osx']))
 opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'godot/scripts/navagent/bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'navagent', PathVariable.PathAccept))
+opts.Add(BoolVariable('use_lto', 'Use link-time optimization', False))
+opts.Add(('target_win_version', 'Targeted Windows version, >= 0x0601 (Windows 7)', '0x0601')),
+
+useMingw = False;
+
+custom_tools = ['default']
+if ( useMingw ):
+    custom_tools = ['mingw']
+
+# Gets the standard flags CC, CCX, etc.
+env = Environment(tools=custom_tools)
+
+env.use_mingw = useMingw;
+env['use_mingw'] = useMingw;
 
 # Local dependency paths, adapt them to your setup
 godot_headers_path = "godot-cpp/godot_headers/"
@@ -59,17 +72,10 @@ elif env['platform'] in ('x11', 'linux'):
         env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 elif env['platform'] == "windows":
-    env['target_path'] += 'win64/'
     cpp_library += '.windows'
-    # This makes sure to keep the session environment variables on windows,
-    # that way you can run scons in a vs 2017 prompt and it will find all the required tools
-    env.Append(ENV = os.environ)
 
-    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
-    if env['target'] in ('debug', 'd'):
-        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
-    else:
-        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
+    import methods
+    methods.configure_for_windows(env)
 
 if env['target'] in ('debug', 'd'):
     cpp_library += '.debug'
@@ -90,9 +96,25 @@ env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
 env.Append(CPPPATH=['src/'])
 sources = Glob('src/*.cpp')
 
-library = env.SharedLibrary(target=env['target_path'] + env['target_name'], source=sources)
+env.Append(CPPPATH=[
+    'vendor'
+])
 
+# print env.Dump();
+# sys.exit();
+
+library = env.SharedLibrary(target=env['target_path'] + env['target_name'], source=sources)
 Default(library)
+
+# env_tests = env.Clone();
+
+# env_tests.Append(CPPPATH=[
+#     'vendor'
+# ])
+# testSources = Glob('tests/*.cpp')
+# tests = env_tests.Program(target='test', source=testSources, LIBS=library)
+
+# Default(tests)
 
 # Generates help for the -h scons option.
 Help(opts.GenerateHelpText(env))
