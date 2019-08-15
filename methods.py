@@ -299,3 +299,23 @@ def configure_mingw(env):
 
     # resrc
     env.Append(BUILDERS={'RES': env.Builder(action=build_res_file, suffix='.o', src_suffix='.rc')})
+
+
+def AddToVSProject(env, vs_incs, vs_srcs, sources):
+    for x in sources:
+        if type(x) == type(""):
+            fname = env.File(x).path
+        else:
+            fname = env.File(x)[0].path
+        pieces = fname.split(".")
+        if len(pieces) > 0:
+            basename = pieces[0]
+            basename = basename.replace('\\\\', '/')
+            if os.path.isfile(basename + ".h"):
+                vs_incs = vs_incs + [basename + ".h"]
+            elif os.path.isfile(basename + ".hpp"):
+                vs_incs = vs_incs + [basename + ".hpp"]
+            if os.path.isfile(basename + ".c"):
+                vs_srcs = vs_srcs + [basename + ".c"]
+            elif os.path.isfile(basename + ".cpp"):
+                vs_srcs = vs_srcs + [basename + ".cpp"]

@@ -1,7 +1,7 @@
 #!python
 import os, subprocess, sys
 
-
+import methods
 
 def add_sources(sources, dir, extension):
   for f in os.listdir(dir):
@@ -72,10 +72,18 @@ elif env['platform'] in ('x11', 'linux'):
         env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 elif env['platform'] == "windows":
-    cpp_library += '.windows'
 
-    import methods
-    methods.configure_for_windows(env)
+    env['target_path'] += 'win64/'
+    cpp_library += '.windows'
+    # This makes sure to keep the session environment variables on windows,
+    # that way you can run scons in a vs 2017 prompt and it will find all the required tools
+    env.Append(ENV = os.environ)
+
+    env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
+    if env['target'] in ('debug', 'd'):
+        env.Append(CCFLAGS = ['-EHsc', '-D_DEBUG', '-MDd'])
+    else:
+        env.Append(CCFLAGS = ['-O2', '-EHsc', '-DNDEBUG', '-MD'])
 
 if env['target'] in ('debug', 'd'):
     cpp_library += '.debug'
@@ -94,7 +102,13 @@ env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])
-sources = Glob('src/*.cpp')
+sources = []
+add_sources(sources, 'src', 'cpp')
+add_sources(sources, 'src', 'h')
+
+vsIncs = []
+vsSrcs = []
+methods.AddToVSProject(env, vsIncs, vsSrcs, sources)
 
 env.Append(CPPPATH=[
     'vendor'
@@ -103,8 +117,27 @@ env.Append(CPPPATH=[
 # print env.Dump();
 # sys.exit();
 
-library = env.SharedLibrary(target=env['target_path'] + env['target_name'], source=sources)
+libraryTargetName = env['target_path'] + env['target_name']
+library = env.SharedLibrary(target=libraryTargetName, source=sources)
 Default(library)
+
+if not env.get('MSVS'):
+    env['MSVS']['PROJECTSUFFIX'] = '.vcxproj'
+    env['MSVS']['SOLUTIONSUFFIX'] = '.sln'
+
+msvs_variants = ['debug|Win32'] + ['debug|x64']
+msvs_targets = [libraryTargetName+'.dll'] + [libraryTargetName+'.dll']
+
+msvc = env.MSVSProject(
+    target = 'Soulslism.vcxproj',
+    srcs = vsSrcs,
+    incs = vsIncs, #["godot_headers", "include", "include/gen", "include/core"],
+    runfile=msvs_targets,
+    buildTarget=msvs_targets,
+    auto_build_solution=1,
+    variant=msvs_variants)
+
+# Default(msvc)
 
 # env_tests = env.Clone();
 
