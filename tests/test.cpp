@@ -10,6 +10,12 @@
 
 using Soulslism::NavAgent;
 
+// void test()  {
+//     NavAgent navAgent = NavAgent{};
+//     navAgent._init();
+
+// }
+
 TEST_CASE( "test", "[single-file]" ) {
     NavAgent navAgent = NavAgent{};
     navAgent._init();

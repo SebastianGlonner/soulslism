@@ -20,3 +20,6 @@ zconf.h.included
 logs
 Thumbs.db
 .idea
+
+.vs/
+x64/

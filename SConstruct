@@ -18,7 +18,9 @@ opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'godot/scripts/navagent/bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'navagent', PathVariable.PathAccept))
 opts.Add(BoolVariable('use_lto', 'Use link-time optimization', False))
+opts.Add(BoolVariable('msvs', 'Use link-time optimization', False))
 opts.Add(('target_win_version', 'Targeted Windows version, >= 0x0601 (Windows 7)', '0x0601')),
+
 
 useMingw = False;
 
@@ -93,61 +95,69 @@ else:
 cpp_library += '.' + str(bits)
 
 # make sure our binding library is properly includes
-env.Append(CPPPATH=['.', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
+env.Append(CPPPATH=[godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
 env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
 env.Append(LIBS=[cpp_library])
 
-env['PDB'] = target=env['target_path'] + env['target_name'] + '.pdb';
+# env['PDB'] = target=env['target_path'] + env['target_name'] + '.pdb';
 env['CCPDBFLAGS'] = '/Zi /Fd${TARGET}.pdb'
 
-# tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=['src/'])
 sources = []
 add_sources(sources, 'src', 'cpp')
-add_sources(sources, 'src', 'h')
 
-vsIncs = []
-vsSrcs = []
-methods.AddToVSProject(env, vsIncs, vsSrcs, sources)
+env.vsIncs = []
+env.vsSrcs = []
+methods.AddToVSProject(env, sources)
 
 env.Append(CPPPATH=[
-    'vendor'
+    'src'
 ])
 
-# print env.Dump();
-# sys.exit();
+#
+# build library
+#
 
-libraryTargetName = env['target_path'] + env['target_name']
-library = env.SharedLibrary(target=libraryTargetName, source=sources)
-Default(library)
+env_lib = env.Clone();
 
-if not env.get('MSVS'):
-    env['MSVS']['PROJECTSUFFIX'] = '.vcxproj'
-    env['MSVS']['SOLUTIONSUFFIX'] = '.sln'
+libraryTargetName = env_lib['target_name']
+library = env_lib.StaticLibrary(target=env_lib['target_path'] + libraryTargetName, source=sources)
 
-msvs_variants = ['debug|Win32'] + ['debug|x64']
-msvs_targets = [libraryTargetName+'.dll'] + [libraryTargetName+'.dll']
 
-msvc = env.MSVSProject(
-    target = 'Soulslism.vcxproj',
-    srcs = vsSrcs,
-    incs = vsIncs, #["godot_headers", "include", "include/gen", "include/core"],
-    runfile=msvs_targets,
-    buildTarget=msvs_targets,
-    auto_build_solution=1,
-    variant=msvs_variants)
+#
+# build library tests
+#
 
-# Default(msvc)
+env_tests = env.Clone();
 
-# env_tests = env.Clone();
+# env_tests.Append(LIBPATH=[env['target_path']])
+# env_tests.Append(LIBS=[library])
 
-# env_tests.Append(CPPPATH=[
-#     'vendor'
-# ])
-# testSources = Glob('tests/*.cpp')
-# tests = env_tests.Program(target='test', source=testSources, LIBS=library)
+env_tests.Append(CPPPATH=[
+    'vendor'
+])
+testSources = []
+add_sources(testSources, 'tests', 'cpp')
+add_sources(testSources, 'src', 'cpp')
+methods.AddToVSProject(env, testSources)
 
-# Default(tests)
+# env_tests.Append(LIBPATH=[env['target_path']])
+# env_tests.Append(LIBS=[libraryTargetName])
+
+testsTargetName = 'test'
+env_tests['PDB'] = testsTargetName + '.pdb';
+tests = env_tests.Program(target='test', source=testSources)
+
+#
+# build msvs project
+#
+
+if env['msvs']:
+    methods.buildMsvs(
+        env_tests,
+        env.vsSrcs,
+        env.vsIncs,
+        testsTargetName+'.exe')
+
 
 # Generates help for the -h scons option.
 Help(opts.GenerateHelpText(env))

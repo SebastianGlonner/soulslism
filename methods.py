@@ -300,22 +300,41 @@ def configure_mingw(env):
     # resrc
     env.Append(BUILDERS={'RES': env.Builder(action=build_res_file, suffix='.o', src_suffix='.rc')})
 
+def buildMsvs(env, vsSrcs, vsIncs, targetName):
+    if not env.get('MSVS'):
+        env['MSVS']['PROJECTSUFFIX'] = '.vcxproj'
+        env['MSVS']['SOLUTIONSUFFIX'] = '.sln'
 
-def AddToVSProject(env, vs_incs, vs_srcs, sources):
+    msvs_variants = ['debug|x64']
+    msvs_targets = [targetName]
+
+    msvs = env.MSVSProject(
+        target = 'Soulslism.vcxproj',
+        srcs = vsSrcs,
+        incs = vsIncs, #["godot_headers", "include", "include/gen", "include/core"],
+        runfile=msvs_targets,
+        buildTarget=msvs_targets,
+        auto_build_solution=1,
+        variant=msvs_variants)
+
+    # Default(msvs)
+
+def AddToVSProject(env, sources):
     for x in sources:
         if type(x) == type(""):
             fname = env.File(x).path
         else:
             fname = env.File(x)[0].path
         pieces = fname.split(".")
+
         if len(pieces) > 0:
             basename = pieces[0]
             basename = basename.replace('\\\\', '/')
             if os.path.isfile(basename + ".h"):
-                vs_incs = vs_incs + [basename + ".h"]
+                env.vsIncs = env.vsIncs + [basename + ".h"]
             elif os.path.isfile(basename + ".hpp"):
-                vs_incs = vs_incs + [basename + ".hpp"]
+                env.vsIncs = env.vsIncs + [basename + ".hpp"]
             if os.path.isfile(basename + ".c"):
-                vs_srcs = vs_srcs + [basename + ".c"]
+                env.vsSrcs = env.vsSrcs + [basename + ".c"]
             elif os.path.isfile(basename + ".cpp"):
-                vs_srcs = vs_srcs + [basename + ".cpp"]
+                env.vsSrcs = env.vsSrcs + [basename + ".cpp"]

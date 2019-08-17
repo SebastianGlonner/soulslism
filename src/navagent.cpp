@@ -1,7 +1,8 @@
 #include "navagent.h"
 
+// using namespace godot;
 using namespace godot;
-using namespace Soulslism;
+using Soulslism::NavAgent;
 
 void NavAgent::_register_methods() {
     register_method("_process", &NavAgent::_process);
@@ -23,9 +24,9 @@ void NavAgent::_init() {
 
 void NavAgent::_process(float delta) {
 
-    Godot::print("test2");
-
     time_passed += speed * delta;
+
+	Transform transform = get_transform();
 
     Vector3 new_position = Vector3(
         amplitude + (amplitude * sin(time_passed * 2.0)),
