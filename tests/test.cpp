@@ -17,9 +17,9 @@ using Soulslism::NavAgent;
 // }
 
 TEST_CASE( "test", "[single-file]" ) {
-    NavAgent navAgent = NavAgent{};
-    navAgent._init();
+    //NavAgent navAgent = NavAgent{};
+    //navAgent._init();
 
-    navAgent._process(1.);
+    //navAgent._process(1.);
     REQUIRE( 1 == 1 );
 }
