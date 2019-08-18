@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="debug|x64">
+			<Configuration>debug</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Label="Globals">
+		<ProjectGuid>{03102B0F-1963-CFCB-CB9B-0E3B9343EF63}</ProjectGuid>
+		<RootNamespace>Soulslism</RootNamespace>
+		<Keyword>MakeFileProj</Keyword>
+		<VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
+		<ConfigurationType>Makefile</ConfigurationType>
+		<UseOfMfc>false</UseOfMfc>
+		<PlatformToolset>v141</PlatformToolset>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<ImportGroup Label="ExtensionSettings">
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" />
+	<PropertyGroup>
+	<_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+		<NMakeBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='debug|x64'">echo Starting SCons</NMakeBuildCommandLine>
+		<NMakeReBuildCommandLine Condition="'$(Configuration)|$(Platform)'=='debug|x64'">echo Starting SCons</NMakeReBuildCommandLine>
+		<NMakeCleanCommandLine Condition="'$(Configuration)|$(Platform)'=='debug|x64'">echo Starting SCons</NMakeCleanCommandLine>
+		<NMakeOutput Condition="'$(Configuration)|$(Platform)'=='debug|x64'">test.exe</NMakeOutput>
+		<NMakePreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='debug|x64'"></NMakePreprocessorDefinitions>
+		<NMakeIncludeSearchPath Condition="'$(Configuration)|$(Platform)'=='debug|x64'">C:\MyGameDev\Godot\Games\Soulslism\godot-cpp\godot_headers;C:\MyGameDev\Godot\Games\Soulslism\godot-cpp\include;C:\MyGameDev\Godot\Games\Soulslism\godot-cpp\include\core;C:\MyGameDev\Godot\Games\Soulslism\godot-cpp\include\gen;C:\MyGameDev\Godot\Games\Soulslism\src;C:\MyGameDev\Godot\Games\Soulslism\vendor</NMakeIncludeSearchPath>
+		<NMakeForcedIncludes Condition="'$(Configuration)|$(Platform)'=='debug|x64'">$(NMakeForcedIncludes)</NMakeForcedIncludes>
+		<NMakeAssemblySearchPath Condition="'$(Configuration)|$(Platform)'=='debug|x64'">$(NMakeAssemblySearchPath)</NMakeAssemblySearchPath>
+		<NMakeForcedUsingAssemblies Condition="'$(Configuration)|$(Platform)'=='debug|x64'">$(NMakeForcedUsingAssemblies)</NMakeForcedUsingAssemblies>
+	</PropertyGroup>
+	<ItemGroup>
+		<ClInclude Include="src\navagent.h" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClCompile Include="src\gdlibrary.cpp" />
+		<ClCompile Include="src\navagent.cpp" />
+		<ClCompile Include="tests\test.cpp" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="SConstruct" />
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+	<ImportGroup Label="ExtensionTargets">
+	</ImportGroup>
+</Project>
+<!-- SCons Data:
+gAJ9cQFVCWRlYnVnfHg2NHECY1NDb25zLlRvb2wubXN2cwpDb25maWcKcQMpgXEEfXEFKFUIY3BwcGF0aHNxBl1xByhVOkM6XE15R2FtZURldlxHb2RvdFxHYW1lc1xTb3Vsc2xpc21cZ29kb3QtY3BwXGdvZG90X2hlYWRlcnNxCFU0QzpcTXlHYW1lRGV2XEdvZG90XEdhbWVzXFNvdWxzbGlzbVxnb2RvdC1jcHBcaW5jbHVkZXEJVTlDOlxNeUdhbWVEZXZcR29kb3RcR2FtZXNcU291bHNsaXNtXGdvZG90LWNwcFxpbmNsdWRlXGNvcmVxClU4QzpcTXlHYW1lRGV2XEdvZG90XEdhbWVzXFNvdWxzbGlzbVxnb2RvdC1jcHBcaW5jbHVkZVxnZW5xC1UmQzpcTXlHYW1lRGV2XEdvZG90XEdhbWVzXFNvdWxzbGlzbVxzcmNxDFUpQzpcTXlHYW1lRGV2XEdvZG90XEdhbWVzXFNvdWxzbGlzbVx2ZW5kb3JxDWVVB3ZhcmlhbnRxDlUFZGVidWdxD1UKY3BwZGVmaW5lc3EQXXERVQdjbWRhcmdzcRJVAFUIcGxhdGZvcm1xE1UDeDY0cRRVB3J1bmZpbGVxFVUIdGVzdC5leGVxFlULYnVpbGR0YXJnZXRxF1UAVQZvdXRkaXJxGFUAdWJzLg==
+gAJ9cQEoVQtPdGhlciBGaWxlc3ECXVUNTG9jYWwgSGVhZGVyc3EDXVUMSGVhZGVyIEZpbGVzcQRdcQVVDnNyY1xuYXZhZ2VudC5ocQZhVQxTb3VyY2UgRmlsZXNxB11xCChVEXNyY1xnZGxpYnJhcnkuY3BwcQlVEHNyY1xuYXZhZ2VudC5jcHBxClUOdGVzdHNcdGVzdC5jcHBxC2VVDlJlc291cmNlIEZpbGVzcQxddS4=-->
