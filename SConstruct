@@ -120,7 +120,7 @@ env.Append(CPPPATH=[
 env_lib = env.Clone();
 
 libraryTargetName = env_lib['target_name']
-library = env_lib.StaticLibrary(target=env_lib['target_path'] + libraryTargetName, source=sources)
+library = env_lib.SharedLibrary(target=env_lib['target_path'] + libraryTargetName, source=sources)
 
 
 #
@@ -161,3 +161,5 @@ if env['msvs']:
 
 # Generates help for the -h scons option.
 Help(opts.GenerateHelpText(env))
+
+Default(library)

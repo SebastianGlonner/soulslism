@@ -6,6 +6,8 @@ using Soulslism::NavAgent;
 
 void NavAgent::_register_methods() {
     register_method("_process", &NavAgent::_process);
+    register_method("setSpeed", &NavAgent::setSpeed);
+    register_method("getSpeed", &NavAgent::getSpeed);
 }
 
 NavAgent::NavAgent() {
@@ -16,10 +18,21 @@ NavAgent::~NavAgent() {
 }
 
 void NavAgent::_init() {
+
+    Godot::print("NavAgent::_init");
+
     time_emit = 0.0;
     time_passed = 0.0;
     amplitude = 100.0;
     speed = 2.0;
+}
+
+void NavAgent::setSpeed(float speed) {
+    this->speed = speed;
+}
+
+float NavAgent::getSpeed() {
+    return this->speed + 1;
 }
 
 void NavAgent::_process(float delta) {

@@ -24,8 +24,9 @@ namespace Soulslism {
         ~NavAgent();
 
         void _init(); // our initializer called by Godot
-
         void _process(float delta);
+        void setSpeed(float speed);
+        float getSpeed();
     };
 
 }

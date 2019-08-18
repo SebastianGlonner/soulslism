@@ -18,3 +18,12 @@ _global_script_class_icons={
 config/name="Soulslism"
 run/main_scene="res://Level.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=1844
+window/size/height=885
+
+[editor_plugins]
+
+enabled=PoolStringArray( "gut" )
