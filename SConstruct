@@ -74,12 +74,10 @@ elif env['platform'] in ('x11', 'linux'):
         env.Append(CCFLAGS = ['-fPIC', '-g','-O3', '-std=c++17'])
 
 elif env['platform'] == "windows":
+    methods.configure_for_windows(env)
 
     env['target_path'] += 'win64/'
     cpp_library += '.windows'
-    # This makes sure to keep the session environment variables on windows,
-    # that way you can run scons in a vs 2017 prompt and it will find all the required tools
-    env.Append(ENV = os.environ)
 
     env.Append(CCFLAGS = ['-DWIN32', '-D_WIN32', '-D_WINDOWS', '-W3', '-GR', '-D_CRT_SECURE_NO_WARNINGS'])
     if env['target'] in ('debug', 'd'):
@@ -122,36 +120,41 @@ env_lib = env.Clone();
 libraryTargetName = env_lib['target_name']
 library = env_lib.SharedLibrary(target=env_lib['target_path'] + libraryTargetName, source=sources)
 
-
 #
-# build library tests
-#
-
-env_tests = env.Clone();
-
-# env_tests.Append(LIBPATH=[env['target_path']])
-# env_tests.Append(LIBS=[library])
-
-env_tests.Append(CPPPATH=[
-    'vendor'
-])
-testSources = []
-add_sources(testSources, 'tests', 'cpp')
-add_sources(testSources, 'src', 'cpp')
-methods.AddToVSProject(env, testSources)
-
-# env_tests.Append(LIBPATH=[env['target_path']])
-# env_tests.Append(LIBS=[libraryTargetName])
-
-testsTargetName = 'test'
-env_tests['PDB'] = testsTargetName + '.pdb';
-tests = env_tests.Program(target='test', source=testSources)
-
-#
-# build msvs project
+# build msvs project and test.exe with catch unit test framework
+# at the time of writing if you want to do that you need to change the
+# library from SharedLibrary to StaticLibrary (cause we dont export the
+# functions from the library)
 #
 
 if env['msvs']:
+    #
+    # build library tests
+    #
+
+    env_tests = env.Clone();
+
+    # env_tests.Append(LIBPATH=[env['target_path']])
+    # env_tests.Append(LIBS=[library])
+
+    env_tests.Append(CPPPATH=[
+        'vendor'
+    ])
+    testSources = []
+    add_sources(testSources, 'tests', 'cpp')
+    add_sources(testSources, 'src', 'cpp')
+    methods.AddToVSProject(env, testSources)
+
+    # env_tests.Append(LIBPATH=[env['target_path']])
+    # env_tests.Append(LIBS=[libraryTargetName])
+
+    testsTargetName = 'test'
+    env_tests['PDB'] = testsTargetName + '.pdb';
+    tests = env_tests.Program(target='test', source=testSources)
+
+    #
+    # build msvs
+    #
     methods.buildMsvs(
         env_tests,
         env.vsSrcs,
