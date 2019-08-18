@@ -1,6 +1,18 @@
 Soulslism
 =========
 
+# clion
+
+Example project on how to configure clion to execute scons and use catch unit test library
+https://github.com/SebastianGlonner/cpp-playground-scons
+
+# gdnative
+
+## auto reload to prevent access error when recompiling
+
+in the editor is a checkbox at gdnative properties window which allows to
+reload the library
+
 
 # Debuging
 
