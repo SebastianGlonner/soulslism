@@ -140,7 +140,7 @@ public class Actor : KinematicBody
             this.otherAi = null;
             // this.agent.Stop();
         }
-        else
+        else if ( agent != null )
         {
 
             this.currentTarget = newTarget;

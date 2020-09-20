@@ -48,28 +48,26 @@ mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
 [node name="Block" type="StaticBody" parent="Navigation/NavigationMeshInstance"]
-editor/display_folded = true
-transform = Transform( -4.37114e-008, 0, 4.99999, 0, 2, 0, -1, 0, -2.18557e-007, -0.311918, 0.44224, 2.18406 )
+transform = Transform( -4.37114e-08, 0, 4.99999, 0, 2, 0, -1, 0, -2.18557e-07, -0.311918, 0.44224, 2.18406 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/Block"]
-transform = Transform( 1, 0, -2.84217e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -2.84217e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Navigation/NavigationMeshInstance/Block"]
-transform = Transform( 1, 0, -4.26326e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -4.26326e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
 [node name="Block2" type="StaticBody" parent="Navigation/NavigationMeshInstance"]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 2, 0, 0, 0, 30, 170.927, 0.44224, 0.272413 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/Block2"]
-transform = Transform( 1, 0, -1.42109e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Navigation/NavigationMeshInstance/Block2"]
-transform = Transform( 1, 0, -2.84217e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -2.84217e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
@@ -77,11 +75,11 @@ material/0 = SubResource( 4 )
 transform = Transform( 1, 0, 0, 0, 2, 0, 0, 0, 35, -27.5275, 0.44224, 47.3697 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/Block3"]
-transform = Transform( 1, 0, -1.42109e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Navigation/NavigationMeshInstance/Block3"]
-transform = Transform( 1, 0, -2.84217e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -2.84217e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
@@ -89,19 +87,18 @@ material/0 = SubResource( 4 )
 transform = Transform( 1, 0, 0, 0, 2, 0, 0, 0, 35, -9.75104, 0.44224, -44.4258 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Navigation/NavigationMeshInstance/Block4"]
-transform = Transform( 1, 0, -1.42109e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -1.42109e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Navigation/NavigationMeshInstance/Block4"]
-transform = Transform( 1, 0, -2.84217e-014, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 1, 0, -2.84217e-14, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 mesh = SubResource( 3 )
 material/0 = SubResource( 4 )
 
 [node name="Walls" type="Spatial" parent="Navigation/NavigationMeshInstance"]
-transform = Transform( -4.37114e-008, 0, 4.99999, 0, 2, 0, -1, 0, -2.18557e-007, 0, 0.44224, 0 )
+transform = Transform( -4.37114e-08, 0, 4.99999, 0, 2, 0, -1, 0, -2.18557e-07, 0, 0.44224, 0 )
 
 [node name="Control" type="Control" parent="."]
-editor/display_folded = true
 margin_right = 40.0
 margin_bottom = 40.0
 

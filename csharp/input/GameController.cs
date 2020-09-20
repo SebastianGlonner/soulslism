@@ -85,9 +85,8 @@ namespace Soulslism
                         Vector3 rayTo = rayFrom + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
                         Godot.Collections.Dictionary selection = camera.GetWorld().DirectSpaceState.IntersectRay(rayFrom, rayTo);
-
-                        object collided = null;
-                        if ( selection.TryGetValue("collider", out collided) ) {
+                        object collided = selection["collider"];
+                        if ( collided != null ) {
                             GD.Print(collided);
                         }
                     }

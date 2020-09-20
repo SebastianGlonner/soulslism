@@ -15,6 +15,7 @@ public class Logging {
         Log(text, Level.DEBUG);
     }
 
+    /*
     static public void Log(Dictionary text)
     {
         foreach ( object key in text.Keys )
@@ -24,6 +25,7 @@ public class Logging {
             Log("\tkey: " + key.ToString() + " - val: " + ( val == null ? "null" : val.ToString()), Level.DEBUG);
         }
     }
+    */
 
     static public void Log(string text, Logging.Level level)
     {

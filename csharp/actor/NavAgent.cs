@@ -5,7 +5,7 @@ using Soulslism;
 
 public class NavAgent
 {
-    const float SPEED = 14.0f;
+    const float SPEED = 10.0f;
 
     private float adjustSPEED = 0;
     private float stopMovement = 0;
@@ -40,6 +40,9 @@ public class NavAgent
     private Vector3 upVector = new Vector3(0, 1, 0);
     private float bodySize;
 
+    private float checkDestinationPosition = 0;
+    private float checkDestinationPositionTreshold = 0.1f;
+
     public NavAgent(Navigation navigationNode, KinematicBody actor, ImmediateGeometry draw = null)
     {
         this.actor = actor;
@@ -53,13 +56,139 @@ public class NavAgent
 
     public float Process(float delta)
     {
+        if (checkDestinationPosition > 0)
+            checkDestinationPosition -= delta;
+
         if (stopMovement > 0)
         {
             stopMovement -= delta;
             if (stopMovement <= 0)
             {
                 stopMovement = -1;
+            }
+            else
+            {
+                return remainingDistance;
+            }
+        }
+
+
+        if (path != null && currentPathPoint < path.Length)
+        {
+
+            int pathLength = path.Length;
+
+            Transform actorTransform = actor.GlobalTransform;
+            Vector3 actorOrigin = actorTransform.origin;
+
+            //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
+            //if ( remainingDistance < 0 )
+            //{
+            //    path = null;
+            //    isWalking = false;
+            //    return remainingDistance;
+            //}
+
+
+
+            Vector3 targetPointWorld = path[currentPathPoint];
+            float nextPointDistance = actorOrigin.DistanceSquaredTo(targetPointWorld);
+
+            if (currentPathPoint + 1 >= pathLength && nextPointDistance < targetDistanceSquare)
+            {
+                path = null;
+                isWalking = false;
+                remainingDistance = (float)Math.Sqrt(nextPointDistance);
+                return remainingDistance;
+            }
+
+            if (nextPointDistance < 4)
+            {
+                currentPathPoint++;
+                return Process(delta);
+            }
+
+            Vector3 desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED);
+            Vector3 directedVelocity = desiredVelocity - actorVelocity;
+            actor.LookAt(actorOrigin + directedVelocity, upVector);
+
+
+            Transform testMoveTransform = actorTransform;
+            //testMoveTransform.origin += directedVelocity.Normalized();
+
+            drawVelocityVector(actorOrigin, actorOrigin + directedVelocity);
+
+       
+            bool wouldCollide = false;
+
+            //wouldCollide = actor.TestMove(
+            //    testMoveTransform,
+            //    directedVelocity * delta,
+            //    true
+            //    );
+
+            if (wouldCollide == false)
+            {
+                //actor.MoveAndSlide(
+                //        directedVelocity,
+                //        upVector,
+                //        true,
+                //        1,
+                //        0.78f,
+                //        false
+                //    );
+
+                //actor.MoveAndCollide(
+                //        desiredVelocity * delta
+                //    );
+
+                actor.GlobalTranslate(desiredVelocity * delta);
+
+                // int collisionCount = actor.GetSlideCount();
+
+                if (false && actor.GetSlideCount() > 0)
+                {
+                    KinematicCollision collided = actor.GetSlideCollision(0);
+                    if (collided != null)
+                    {
+                        Godot.Object collidedObject = collided.GetCollider();
+                        if (collidedObject is Actor)
+                        {
+                            Actor collidedActor = collidedObject as Actor;
+                            if (collidedActor.GetActorFaction() == (actor as Actor).GetActorFaction())
+                            {
+                                stopMovement = .2f;
+                            }
+                        }
+                    }
+                    // Logging.Log("" + (collided.GetCollider() is Actor));
+                }
             } else
+            {
+                stopMovement = 1;
+            }
+        }
+        else
+        {
+            isWalking = false;
+        }
+
+        return remainingDistance;
+    }
+
+    public float Process_backup(float delta)
+    {
+        if (checkDestinationPosition > 0)
+            checkDestinationPosition -= delta;
+
+        if (stopMovement > 0)
+        {
+            stopMovement -= delta;
+            if (stopMovement <= 0)
+            {
+                stopMovement = -1;
+            }
+            else
             {
                 return remainingDistance;
             }
@@ -110,22 +239,27 @@ public class NavAgent
             testMoveTransform.origin += directedVelocity.Normalized();
 
             drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * delta);
-            
-            bool wouldCollide = actor.TestMove(
-                testMoveTransform,
-                directedVelocity * delta,
-                false
-                );
+
+            //bool wouldCollide = actor.TestMove(
+            //    testMoveTransform,
+            //    directedVelocity * delta,
+            //    false
+            //    );
+
+            bool wouldCollide = false;
 
             if (wouldCollide == false)
             {
-                actor.MoveAndSlide(
-                        directedVelocity,
-                        upVector,
-                        true,
-                        1,
-                        0.78f,
-                        false
+                //actor.MoveAndSlide(
+                //        directedVelocity,
+                //        upVector,
+                //        true,
+                //        1,
+                //        0.78f,
+                //        false
+                //    );
+                actor.MoveAndCollide(
+                        directedVelocity * delta
                     );
 
                 // int collisionCount = actor.GetSlideCount();
@@ -148,7 +282,8 @@ public class NavAgent
                     // Logging.Log("" + (collided.GetCollider() is Actor));
                 }
             }
-        } else
+        }
+        else
         {
             isWalking = false;
         }
@@ -243,10 +378,15 @@ public class NavAgent
 
     private void OnDestinationMovement(Actor destination)
     {
+        if (checkDestinationPosition > 0)
+            return;
+
+        checkDestinationPosition = checkDestinationPositionTreshold;
+
         Vector3 newEnd = destination.GetGlobalTransform().origin;
         //Logging.Log("x: " + Math.Abs(newEnd.x - this.end.x));
         //Logging.Log("z: " + Math.Abs(newEnd.z - this.end.z));
-        if ( (Math.Abs(newEnd.x - this.end.x) + Math.Abs(newEnd.z - this.end.z)) > 2.0f )
+        if ( (Math.Abs(newEnd.x - this.end.x) + Math.Abs(newEnd.z - this.end.z)) > 4.0f )
         {
             countUpdateForTargetMovement++;
             begin = this.actor.GetGlobalTransform().origin;

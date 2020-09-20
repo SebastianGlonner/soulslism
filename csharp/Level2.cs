@@ -2,7 +2,7 @@ using System;
 using Godot;
 using Soulslism;
 
-public class Level : Spatial
+public class Level2 : Spatial
 {
     private LevelHelper levelHelper;
     private GameController cameraController;
@@ -17,21 +17,7 @@ public class Level : Spatial
             levelHelper.getPlayerCameraRotationHelperX()
         );
 
-        setUpSmall();
-        // setUpHuge();
-    }
-
-    private void setUpSmall()
-    {
-        SetProcessInput(true);
-
-        int countPerSide = 1;
-
-        Boolean drawPathVectors = true;
-
-        levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-50, 0, 10), drawPathVectors);
-        levelHelper.DeployMany(levelHelper.DeployEnemy, countPerSide, new Vector3(-30, 0, -4), drawPathVectors);
-
+        setUpHuge();
     }
 
     private void setUpHuge()
@@ -44,15 +30,14 @@ public class Level : Spatial
 
         Boolean drawPathVectors = true;
 
+        levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-90, 0, 0), drawPathVectors);
         levelHelper.DeployMany(levelHelper.DeployMinion, countPerSide, new Vector3(-50, 0, 0), drawPathVectors);
 
-        //DeployMinion(new Vector3(-55, 0, 0));
-        //DeployMinion(new Vector3(-54, 0, 0));
+        setupEnemies(drawPathVectors);
+    }
 
-        //for (int i = 1; i < 10; i++)
-        //{
-        //    DeployMinion(new Vector3(-55, 0, i));
-        //}
+    private void setupEnemies(Boolean drawPathVectors)
+    {
 
         levelHelper.DeployEnemy(new Vector3(-15, 0, -10));
         levelHelper.DeployEnemy(new Vector3(-15, 0, -9));
@@ -70,6 +55,7 @@ public class Level : Spatial
         levelHelper.DeployMany(levelHelper.DeployEnemy, 100, new Vector3(90, 0, 0), drawPathVectors);
 
     }
+
     public override void _Input(InputEvent @event)
     {
         // this.cameraController._input(@event);

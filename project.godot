@@ -23,6 +23,13 @@ config/icon="res://icon.png"
 
 frame=false
 
+[mono]
+
+profiler/enabled=true
+export/include_scripts_content=true
+export/aot/enabled=true
+export/aot/full_aot=true
+
 [physics]
 
 3d/physics_engine="Bullet"
