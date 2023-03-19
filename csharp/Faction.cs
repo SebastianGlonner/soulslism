@@ -1,0 +1,5 @@
+﻿enum Faction
+{
+    Friend,
+    Enemy
+}
