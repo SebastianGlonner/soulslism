@@ -1,8 +1,8 @@
-﻿using Godot;
+using Godot;
 using Godot.Collections;
 using System.Collections.Generic;
 
-public class Logging {
+public partial class Logging {
 
     public enum Level
     {
@@ -62,7 +62,7 @@ public class Logging {
     //    ObjectName name = gameObject.GetComponent<ObjectName>();
     //    if (name == null)
     //    {
-    //        Transform nameObjectTransform = gameObject.transform.Find("ObjectName");
+    //        Transform3D nameObjectTransform = gameObject.transform.Find("ObjectName");
     //        if (nameObjectTransform != null)
     //        {
     //            name = nameObjectTransform.gameObject.GetComponent<ObjectName>();

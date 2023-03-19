@@ -2,7 +2,7 @@ using System;
 using Godot;
 using Soulslism;
 
-public class Level : Spatial
+public partial class Level : Node3D
 {
 	private LevelHelper levelHelper;
 	private GameController cameraController;

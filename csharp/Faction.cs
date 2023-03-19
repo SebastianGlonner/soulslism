@@ -1,4 +1,4 @@
-﻿enum Faction
+enum Faction
 {
     Friend,
     Enemy

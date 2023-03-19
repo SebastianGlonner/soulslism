@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-public class AiActionCollection {
+public partial class AiActionCollection {
 
     HashSet<AiTarget> targets = new HashSet<AiTarget>();
 

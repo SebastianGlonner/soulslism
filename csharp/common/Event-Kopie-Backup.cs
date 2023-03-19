@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Soulslism
 {
-    public class EventsMemory<T>
+    public partial class EventsMemory<T>
     {
 
         private struct EventingPair
@@ -53,7 +53,7 @@ namespace Soulslism
         }
     }
 
-    public class Event<T>
+    public partial class Event<T>
     {
 
         static private uint staticUniqueId = 0;

@@ -1,10 +1,10 @@
 using System;
 using Godot;
 
-public class LevelCollision : Spatial
+public partial class LevelCollision : Node3D
 {
 
-    private Camera camera;
+    private Camera3D camera;
 
     private Navigation navigationNode;
 
@@ -13,11 +13,11 @@ public class LevelCollision : Spatial
 
     private bool draw_path = true;
 
-    private SpatialMaterial drawPathMaterial;
+    private StandardMaterial3D drawPathMaterial;
 
     public override void _Ready()
     {
-        drawPathMaterial = new SpatialMaterial();
+        drawPathMaterial = new StandardMaterial3D();
         drawPathMaterial.FlagsUnshaded = true;
         drawPathMaterial.FlagsUsePointSize = true;
         drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
@@ -25,7 +25,7 @@ public class LevelCollision : Spatial
         minionScene = (PackedScene)ResourceLoader.Load("res://scenes/Actor.tscn");
         SetProcessInput(true);
 
-        camera = GetNode("/root/Level/Camera") as Camera;
+        camera = GetNode("/root/Level/Camera3D") as Camera3D;
         enemyCastle = GetNode("EnemyCastle") as Actor;
         enemyCastle.SetTotalLife(60000);
         navigationNode = GetNode("Navigation") as Navigation;
@@ -85,10 +85,10 @@ public class LevelCollision : Spatial
         player.GlobalTranslate(at);
         player.SetTotalLife(15);
 
-        ImmediateGeometry draw = null;
+        ImmediateMesh draw = null;
         if (drawPath)
         {
-            draw = new ImmediateGeometry();
+            draw = new ImmediateMesh();
             draw.SetMaterialOverride(drawPathMaterial);
             AddChild(draw);
         }
@@ -121,7 +121,7 @@ public class LevelCollision : Spatial
     //            Vector3 from = camera.ProjectRayOrigin(mouseEvent.Position);
     //            Vector3 to = from + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
-    //            PhysicsDirectSpaceState spaceStace = GetWorld().DirectSpaceState;
+    //            PhysicsDirectSpaceState3D spaceStace = GetWorld3d().DirectSpaceState;
 
     //            object collision;
     //            Dictionary colliding = spaceStace.IntersectRay(from, to);

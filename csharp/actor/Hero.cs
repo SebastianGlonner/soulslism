@@ -2,7 +2,7 @@ using Soulslism;
 
 namespace Soulslism
 {
-    public class Hero
+    public partial class Hero
     {
     }
 }

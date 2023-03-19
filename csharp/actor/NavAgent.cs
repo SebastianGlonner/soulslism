@@ -1,9 +1,9 @@
-﻿using Godot;
+using Godot;
 using System;
 using System.Collections.Generic;
 using Soulslism;
 
-public class NavAgent
+public partial class NavAgent
 {
     const float SPEED = 10.0f;
 
@@ -26,7 +26,7 @@ public class NavAgent
     private Vector3 actorVelocity;
     private int currentPathPoint;
 
-    private KinematicBody actor;
+    private CharacterBody3D actor;
 
     private bool isWalking = false;
 
@@ -35,7 +35,7 @@ public class NavAgent
     private EventManaged<Actor> targetMovingManagedEvent = new EventManaged<Actor>();
     private EventManaged<Actor> targetDyingManagedEvent = new EventManaged<Actor>();
 
-    private ImmediateGeometry draw;
+    private ImmediateMesh draw;
 
     private Vector3 upVector = new Vector3(0, 1, 0);
     private float bodySize;
@@ -43,7 +43,7 @@ public class NavAgent
     private float checkDestinationPosition = 0;
     private float checkDestinationPositionTreshold = 0.1f;
 
-    public NavAgent(Navigation navigationNode, KinematicBody actor, ImmediateGeometry draw = null)
+    public NavAgent(Navigation navigationNode, CharacterBody3D actor, ImmediateMesh draw = null)
     {
         this.actor = actor;
         this.draw = draw;
@@ -78,7 +78,7 @@ public class NavAgent
 
             int pathLength = path.Length;
 
-            Transform actorTransform = actor.GlobalTransform;
+            Transform3D actorTransform = actor.GlobalTransform;
             Vector3 actorOrigin = actorTransform.origin;
 
             //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
@@ -113,7 +113,7 @@ public class NavAgent
             actor.LookAt(actorOrigin + directedVelocity, upVector);
 
 
-            Transform testMoveTransform = actorTransform;
+            Transform3D testMoveTransform = actorTransform;
             //testMoveTransform.origin += directedVelocity.Normalized();
 
             drawVelocityVector(actorOrigin, actorOrigin + directedVelocity);
@@ -148,7 +148,7 @@ public class NavAgent
 
                 if (false && actor.GetSlideCount() > 0)
                 {
-                    KinematicCollision collided = actor.GetSlideCollision(0);
+                    KinematicCollision3D collided = actor.GetSlideCollision(0);
                     if (collided != null)
                     {
                         Godot.Object collidedObject = collided.GetCollider();
@@ -200,7 +200,7 @@ public class NavAgent
 
             int pathLength = path.Length;
 
-            Transform actorTransform = actor.GetGlobalTransform();
+            Transform3D actorTransform = actor.GetGlobalTransform();
             Vector3 actorOrigin = actorTransform.origin;
 
             //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
@@ -235,7 +235,7 @@ public class NavAgent
             actor.LookAt(actorOrigin + directedVelocity, upVector);
 
 
-            Transform testMoveTransform = actorTransform;
+            Transform3D testMoveTransform = actorTransform;
             testMoveTransform.origin += directedVelocity.Normalized();
 
             drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * delta);
@@ -266,7 +266,7 @@ public class NavAgent
 
                 if (false && actor.GetSlideCount() > 0)
                 {
-                    KinematicCollision collided = actor.GetSlideCollision(0);
+                    KinematicCollision3D collided = actor.GetSlideCollision(0);
                     if (collided != null)
                     {
                         Godot.Object collidedObject = collided.GetCollider();

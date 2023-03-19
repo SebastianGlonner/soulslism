@@ -1,4 +1,4 @@
-﻿public class Properties {
+public partial class Properties {
 
     // public static float BASE_MOVEMENT_SPEED = 20.0f;
     // public static float BASE_ANGULAR_SPEED = 600.0f;

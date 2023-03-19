@@ -2,7 +2,7 @@ using Godot;
 using System;
 using Soulslism;
 
-public class Actor : KinematicBody
+public partial class Actor : CharacterBody3D
 {
 	public float attackRange = 4f;
 	public float attackSpeed = .8f;
@@ -29,9 +29,9 @@ public class Actor : KinematicBody
 
 	private bool isActing = true;
 
-	private MeshInstance meshInstance;
+	private MeshInstance3D meshInstance;
 
-	private Area sonar;
+	private Area3D sonar;
 
 	public Event<Actor> eventDying = new Event<Actor>();
 	public EventObservable<Actor> eventMoving = new EventObservable<Actor>();
@@ -57,10 +57,10 @@ public class Actor : KinematicBody
 		lifeLine.GetIndex();
 		aiTarget = new AiTarget(this, Properties.PRIORITY_ENEMY);
 
-		meshInstance = GetNode("Body/MeshInstance") as MeshInstance;
+		meshInstance = GetNode("Body/MeshInstance3D") as MeshInstance3D;
 
-		sonar = GetNode("Sonar") as Area;
-		sonar.Connect("body_entered", this, "OnTriggerEnter");
+		sonar = GetNode("Sonar") as Area3D;
+		sonar.Connect("body_entered",new Callable(this,"OnTriggerEnter"));
 		AddCollisionExceptionWith(this);
 
 	}
@@ -73,7 +73,7 @@ public class Actor : KinematicBody
 	public override void _Notification(int what)
 	{
 		// Logging.Log("_notification: " + what);
-		if (what == Spatial.NotificationTransformChanged)
+		if (what == Node3D.NotificationTransformChanged)
 		{
 			this.eventMoving.Trigger(this);
 		} else if ( what == Godot.Object.NotificationPredelete )

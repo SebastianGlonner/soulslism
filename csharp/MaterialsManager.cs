@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Soulslism
 {
-    public class MaterialsManager
+    public partial class MaterialsManager
     {
         public enum Material
         {

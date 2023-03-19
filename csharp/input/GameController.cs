@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using Godot;
 namespace Soulslism
 {
 
-    public class GameController
+    public partial class GameController
     {
         private float mouseSpeed = 0.25f;
 
@@ -17,9 +17,9 @@ namespace Soulslism
 
         private float zoomSpeed = 6;
 
-        private Camera camera;
+        private Camera3D camera;
 
-        private Spatial rotationHelperX;
+        private Node3D rotationHelperX;
 
         private Vector3 moveCamera = new Vector3();
 
@@ -28,7 +28,7 @@ namespace Soulslism
 
         private InputStateMachine machine;
 
-        public GameController(Camera camera, Spatial rotationHelperX)
+        public GameController(Camera3D camera, Node3D rotationHelperX)
         {
             this.camera = camera;
             this.rotationHelperX = rotationHelperX;
@@ -84,7 +84,7 @@ namespace Soulslism
                         Vector3 rayFrom = camera.ProjectRayOrigin(mouseEvent.Position);
                         Vector3 rayTo = rayFrom + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
-                        Godot.Collections.Dictionary selection = camera.GetWorld().DirectSpaceState.IntersectRay(rayFrom, rayTo);
+                        Godot.Collections.Dictionary selection = camera.GetWorld3d().DirectSpaceState.IntersectRay(rayFrom, rayTo);
                         object collided = selection["collider"];
                         if ( collided != null ) {
                             GD.Print(collided);
@@ -127,7 +127,7 @@ namespace Soulslism
             
 
             if ( rotating ) {
-                rotationHelperX.RotateX(Mathf.Deg2Rad(moveCamera.z * mouseSpeed * -1));
+                rotationHelperX.RotateX(Mathf.DegToRad(moveCamera.z * mouseSpeed * -1));
                 Orthonormalize(rotationHelperX);
             }
             
@@ -147,7 +147,7 @@ namespace Soulslism
         //            Vector3 from = camera.ProjectRayOrigin(mouseEvent.Position);
         //            Vector3 to = from + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
-        //            PhysicsDirectSpaceState spaceStace = GetWorld().DirectSpaceState;
+        //            PhysicsDirectSpaceState3D spaceStace = GetWorld3d().DirectSpaceState;
 
         //            object collision;
         //            Dictionary colliding = spaceStace.IntersectRay(from, to);
@@ -164,7 +164,7 @@ namespace Soulslism
 
         // }
 
-        private void Orthonormalize(Spatial node) {
+        private void Orthonormalize(Node3D node) {
             node.SetTransform(node.GetTransform().Orthonormalized());
 
         }

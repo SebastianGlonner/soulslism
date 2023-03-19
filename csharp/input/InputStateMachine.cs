@@ -6,13 +6,13 @@ namespace Soulslism {
         
         private InputState currentState = null;
 
-        private Camera camera;
+        private Camera3D camera;
 
-        private Spatial rotationHelperX;
+        private Node3D rotationHelperX;
 
         private InputStateIdle isIdle;
 
-        public InputStateMachine(Camera camera, Spatial rotationHelperX)
+        public InputStateMachine(Camera3D camera, Node3D rotationHelperX)
         {
             this.camera = camera;
             this.rotationHelperX = rotationHelperX;

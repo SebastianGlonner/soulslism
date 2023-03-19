@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 # class member variables go here, for example:
 # var a = 2
@@ -18,13 +18,13 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == 1:
-		var camera = $Camera
+		var camera = $Camera3D
 		var from = camera.project_ray_origin(event.position)
 		print("from ", from);
 		var to = from + camera.project_ray_normal(event.position) * ray_length
 		print("to ", to);
 		
-		var space_state = get_world().direct_space_state
+		var space_state = get_world_3d().direct_space_state
 		# use global coordinates, not local to node
 		var result = space_state.intersect_ray(from, to).position
 		

@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Soulslism
 {
-    public class EventManaged<T>
+    public partial class EventManaged<T>
     {
         private struct EventMemoryPair<T>
         {
@@ -53,7 +53,7 @@ namespace Soulslism
         }
     }
 
-    public class Event<T>
+    public partial class Event<T>
     {
         static private uint staticUniqueId = 0;
         static private uint GetUniqueId()
@@ -125,7 +125,7 @@ namespace Soulslism
         }
     }
 
-    public class EventObservable<T> : Event<T>
+    public partial class EventObservable<T> : Event<T>
     {
         public Event<int> eventAdd = new Event<int>();
         public Event<int> eventRemove = new Event<int>();

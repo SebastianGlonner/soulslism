@@ -1,0 +1,7 @@
+C:\GameDev\GodotProjects\soulslism\.mono\temp\bin\Debug\SoulslismCSharp.dll
+C:\GameDev\GodotProjects\soulslism\.mono\temp\bin\Debug\SoulslismCSharp.pdb
+C:\GameDev\GodotProjects\soulslism\.mono\temp\obj\Debug\SoulslismCSharp.csproj.AssemblyReference.cache
+C:\GameDev\GodotProjects\soulslism\.mono\temp\obj\Debug\SoulslismCSharp.GeneratedMSBuildEditorConfig.editorconfig
+C:\GameDev\GodotProjects\soulslism\.mono\temp\obj\Debug\SoulslismCSharp.csproj.CoreCompileInputs.cache
+C:\GameDev\GodotProjects\soulslism\.mono\temp\obj\Debug\SoulslismCSharp.dll
+C:\GameDev\GodotProjects\soulslism\.mono\temp\obj\Debug\SoulslismCSharp.pdb

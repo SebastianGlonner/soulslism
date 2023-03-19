@@ -1,16 +1,16 @@
-﻿using Godot;
+using Godot;
 
-public class LifeLine : Spatial {
+public partial class LifeLine : Node3D {
 
     private int percentLife = 100;
     private Vector3 localScale;
     private float maxScaleY;
     private float actualScaleY;
-    private Spatial lineToScale;
+    private Node3D lineToScale;
 
     public override void _Ready()
     {
-        lineToScale = GetNode("Life") as Spatial;
+        lineToScale = GetNode("Life") as Node3D;
         maxScaleY = lineToScale.GetScale().y;
     }
 

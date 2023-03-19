@@ -1,7 +1,7 @@
-﻿using Godot;
+using Godot;
 using System;
 
-public class AiTarget {
+public partial class AiTarget {
 
     private Actor targetActor;
     public string myObjectName;

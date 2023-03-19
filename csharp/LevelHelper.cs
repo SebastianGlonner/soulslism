@@ -1,10 +1,10 @@
 using System;
 using Godot;
 
-public class LevelHelper
+public partial class LevelHelper
 {
-    private Camera camera;
-    private Spatial cameraRotationHelperX;
+    private Camera3D camera;
+    private Node3D cameraRotationHelperX;
     private Navigation navigationNode;
 
     private PackedScene minionScene;
@@ -12,32 +12,32 @@ public class LevelHelper
 
     private bool draw_path = true;
 
-    private SpatialMaterial drawPathMaterial;
+    private StandardMaterial3D drawPathMaterial;
 
-    private Spatial rootNode;
+    private Node3D rootNode;
 
-    public void SetUp(Spatial node)
+    public void SetUp(Node3D node)
     {
         this.rootNode = node;
 
-        drawPathMaterial = new SpatialMaterial();
+        drawPathMaterial = new StandardMaterial3D();
         drawPathMaterial.FlagsUnshaded = true;
         drawPathMaterial.FlagsUsePointSize = true;
         drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
 
         minionScene = (PackedScene)ResourceLoader.Load("res://scenes/Actor.tscn");
 
-        cameraRotationHelperX = node.GetNode("/root/Level/CameraRotationHelper") as Spatial;
-        camera = cameraRotationHelperX.GetNode("Camera") as Camera;
+        cameraRotationHelperX = node.GetNode("/root/Level/CameraRotationHelper") as Node3D;
+        camera = cameraRotationHelperX.GetNode("Camera3D") as Camera3D;
 
         // setup initial camera position
-        cameraRotationHelperX.RotateX(Mathf.Deg2Rad(-65));
+        cameraRotationHelperX.RotateX(Mathf.DegToRad(-65));
         Vector3 camerInitialPosition = new Vector3();
         camerInitialPosition.y = 70;
         camerInitialPosition.z = 40;
         cameraRotationHelperX.GlobalTranslate(camerInitialPosition);
 
-        Transform cameraTransform = camera.GetTransform();
+        Transform3D cameraTransform = camera.GetTransform();
         cameraTransform.origin = Vector3.Zero;
         camera.SetTransform(cameraTransform);
 
@@ -47,12 +47,12 @@ public class LevelHelper
         navigationNode = node.GetNode("Navigation") as Navigation;
     }
 
-    public Camera getPlayerCamera()
+    public Camera3D getPlayerCamera()
     {
         return this.camera;
     }
 
-    public Spatial getPlayerCameraRotationHelperX() {
+    public Node3D getPlayerCameraRotationHelperX() {
         return this.cameraRotationHelperX;
     }
 
@@ -94,10 +94,10 @@ public class LevelHelper
         player.GlobalTranslate(at);
         player.SetTotalLife(15);
 
-        ImmediateGeometry draw = null;
+        ImmediateMesh draw = null;
         if (drawPath)
         {
-            draw = new ImmediateGeometry();
+            draw = new ImmediateMesh();
             draw.SetMaterialOverride(drawPathMaterial);
             this.rootNode.AddChild(draw);
         }
