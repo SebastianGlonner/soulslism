@@ -1,3 +1,0 @@
-[submodule "addons/profiler"]
-	path = addons/profiler
-	url = https://github.com/SebastianGlonner/godot-csharp-profiler.git
