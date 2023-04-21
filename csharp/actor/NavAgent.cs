@@ -7,30 +7,31 @@ public partial class NavAgent
 {
     const float SPEED = 10.0f;
 
-    private float adjustSPEED = 0;
-    private float stopMovement = 0;
+    private double adjustSPEED = 0;
+    private double stopMovement = 0;
 
     private Vector3 begin;
     private Vector3 end;
 
     private Actor target;
-    private float targetDistance;
-    private float targetDistanceSquare;
+    private double targetDistance;
+    private double targetDistanceSquare;
 
-    private float currentDistance;
-    private float currentDistanceSquare;
+    private double currentDistance;
+    private double currentDistanceSquare;
 
-    private float remainingDistance;
+    private double remainingDistance;
 
     private Vector3[] path;
     private Vector3 actorVelocity;
     private int currentPathPoint;
 
-    private CharacterBody3D actor;
+    private Actor actor;
 
     private bool isWalking = false;
 
-    private Navigation navigationNode;
+    // g35 private Navigation navigationNode;
+    private World3D world;
 
     private EventManaged<Actor> targetMovingManagedEvent = new EventManaged<Actor>();
     private EventManaged<Actor> targetDyingManagedEvent = new EventManaged<Actor>();
@@ -38,23 +39,28 @@ public partial class NavAgent
     private ImmediateMesh draw;
 
     private Vector3 upVector = new Vector3(0, 1, 0);
-    private float bodySize;
+    private double bodySize;
 
-    private float checkDestinationPosition = 0;
-    private float checkDestinationPositionTreshold = 0.1f;
+    private double checkDestinationPosition = 0;
+    private double checkDestinationPositionTreshold = 0.1f;
 
-    public NavAgent(Navigation navigationNode, CharacterBody3D actor, ImmediateMesh draw = null)
+
+    bool godotNavigationAgent = true;
+
+    public NavAgent(World3D world, Actor actor, ImmediateMesh draw = null)
     {
         this.actor = actor;
         this.draw = draw;
 
-        this.navigationNode = navigationNode;
-        
+        // g35 this.navigationNode = navigationNode;
+        this.world = world;
+
+
         bodySize = 1f;
 
     }
 
-    public float Process(float delta)
+    public double Process(double delta)
     {
         if (checkDestinationPosition > 0)
             checkDestinationPosition -= delta;
@@ -72,14 +78,33 @@ public partial class NavAgent
             }
         }
 
+        Vector3 targetPointWorld;
+        Vector3 desiredVelocity;
+        Vector3 directedVelocity;
+
+        Transform3D actorTransform = actor.GlobalTransform;
+        Vector3 actorOrigin = actorTransform.Origin;
+
+        if (godotNavigationAgent)
+        {
+            targetPointWorld = actor.NavigationAgent.GetNextPathPosition();
+
+            desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED);
+            directedVelocity = desiredVelocity - actorVelocity;
+            actor.LookAt(actorOrigin + directedVelocity, upVector);
+
+            actor.Velocity = desiredVelocity;
+            actor.MoveAndSlide();
+
+            remainingDistance = (float)Math.Sqrt(actorOrigin.DistanceSquaredTo(targetPointWorld));
+            return remainingDistance;
+        }
 
         if (path != null && currentPathPoint < path.Length)
         {
 
-            int pathLength = path.Length;
 
-            Transform3D actorTransform = actor.GlobalTransform;
-            Vector3 actorOrigin = actorTransform.origin;
+            int pathLength = path.Length;
 
             //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
             //if ( remainingDistance < 0 )
@@ -91,7 +116,7 @@ public partial class NavAgent
 
 
 
-            Vector3 targetPointWorld = path[currentPathPoint];
+            targetPointWorld = path[currentPathPoint];
             float nextPointDistance = actorOrigin.DistanceSquaredTo(targetPointWorld);
 
             if (currentPathPoint + 1 >= pathLength && nextPointDistance < targetDistanceSquare)
@@ -108,8 +133,8 @@ public partial class NavAgent
                 return Process(delta);
             }
 
-            Vector3 desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED);
-            Vector3 directedVelocity = desiredVelocity - actorVelocity;
+            desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED);
+            directedVelocity = desiredVelocity - actorVelocity;
             actor.LookAt(actorOrigin + directedVelocity, upVector);
 
 
@@ -129,29 +154,26 @@ public partial class NavAgent
 
             if (wouldCollide == false)
             {
-                //actor.MoveAndSlide(
-                //        directedVelocity,
-                //        upVector,
-                //        true,
-                //        1,
-                //        0.78f,
-                //        false
-                //    );
+                actor.Velocity = desiredVelocity;
+                actor.MoveAndSlide();
 
                 //actor.MoveAndCollide(
-                //        desiredVelocity * delta
+                //        desiredVelocity * (float)delta
                 //    );
 
-                actor.GlobalTranslate(desiredVelocity * delta);
+                // move on our own
+                // actor.GlobalTranslate(desiredVelocity * (float)delta);
 
                 // int collisionCount = actor.GetSlideCount();
 
-                if (false && actor.GetSlideCount() > 0)
+                // g35 if (false && actor.GetSlideCount() > 0)
+                bool test = false;
+                if ( test )
                 {
                     KinematicCollision3D collided = actor.GetSlideCollision(0);
                     if (collided != null)
                     {
-                        Godot.Object collidedObject = collided.GetCollider();
+                        GodotObject collidedObject = collided.GetCollider();
                         if (collidedObject is Actor)
                         {
                             Actor collidedActor = collidedObject as Actor;
@@ -176,124 +198,21 @@ public partial class NavAgent
         return remainingDistance;
     }
 
-    public float Process_backup(float delta)
-    {
-        if (checkDestinationPosition > 0)
-            checkDestinationPosition -= delta;
-
-        if (stopMovement > 0)
-        {
-            stopMovement -= delta;
-            if (stopMovement <= 0)
-            {
-                stopMovement = -1;
-            }
-            else
-            {
-                return remainingDistance;
-            }
-        }
-
-
-        if (path != null && currentPathPoint < path.Length)
-        {
-
-            int pathLength = path.Length;
-
-            Transform3D actorTransform = actor.GetGlobalTransform();
-            Vector3 actorOrigin = actorTransform.origin;
-
-            //remainingDistance = actorOrigin.DistanceTo(end) - targetDistance;
-            //if ( remainingDistance < 0 )
-            //{
-            //    path = null;
-            //    isWalking = false;
-            //    return remainingDistance;
-            //}
-
-
-
-            Vector3 targetPointWorld = path[currentPathPoint];
-            float nextPointDistance = actorOrigin.DistanceSquaredTo(targetPointWorld);
-
-            if (currentPathPoint + 1 >= pathLength && nextPointDistance < targetDistanceSquare)
-            {
-                path = null;
-                isWalking = false;
-                remainingDistance = (float)Math.Sqrt(nextPointDistance);
-                return remainingDistance;
-            }
-
-            if (nextPointDistance < 4)
-            {
-                currentPathPoint++;
-                return Process(delta);
-            }
-
-            Vector3 desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED + adjustSPEED);
-            Vector3 directedVelocity = desiredVelocity - actorVelocity;
-            actor.LookAt(actorOrigin + directedVelocity, upVector);
-
-
-            Transform3D testMoveTransform = actorTransform;
-            testMoveTransform.origin += directedVelocity.Normalized();
-
-            drawVelocityVector(actorOrigin, actorOrigin + directedVelocity * delta);
-
-            //bool wouldCollide = actor.TestMove(
-            //    testMoveTransform,
-            //    directedVelocity * delta,
-            //    false
-            //    );
-
-            bool wouldCollide = false;
-
-            if (wouldCollide == false)
-            {
-                //actor.MoveAndSlide(
-                //        directedVelocity,
-                //        upVector,
-                //        true,
-                //        1,
-                //        0.78f,
-                //        false
-                //    );
-                actor.MoveAndCollide(
-                        directedVelocity * delta
-                    );
-
-                // int collisionCount = actor.GetSlideCount();
-
-                if (false && actor.GetSlideCount() > 0)
-                {
-                    KinematicCollision3D collided = actor.GetSlideCollision(0);
-                    if (collided != null)
-                    {
-                        Godot.Object collidedObject = collided.GetCollider();
-                        if (collidedObject is Actor)
-                        {
-                            Actor collidedActor = collidedObject as Actor;
-                            if (collidedActor.GetActorFaction() == (actor as Actor).GetActorFaction())
-                            {
-                                stopMovement = .2f;
-                            }
-                        }
-                    }
-                    // Logging.Log("" + (collided.GetCollider() is Actor));
-                }
-            }
-        }
-        else
-        {
-            isWalking = false;
-        }
-
-        return remainingDistance;
-    }
-
     private void updatePath()
     {
-        path = this.navigationNode.GetSimplePath(begin, end, true);
+        if (godotNavigationAgent)
+        {
+            actor.NavigationAgent.TargetPosition = end;
+            return;
+        }
+
+
+        Rid map = this.world.NavigationMap;
+
+        // g35 path = this.navigationNode.GetSimplePath(begin, end, true);
+        // Vector3 targetPoint = NavigationServer3D.MapGetClosestPointToSegment(map, begin, end, true);
+        path = NavigationServer3D.MapGetPath(map, begin, end, true);
+
 
         //  Logging.Log("Update NavAgent path - Point.Count: " + path.Length);
         if ( path.Length <= 0 )
@@ -307,6 +226,7 @@ public partial class NavAgent
         remainingDistance = begin.DistanceTo(end);
         isWalking = true;
 
+        /*
         if ( false && draw != null )
         {
             Logging.Log("path - begin:" + begin);
@@ -324,6 +244,7 @@ public partial class NavAgent
             }
             draw.End();
         }
+        */
     }
 
     private void updatePathToEncounteredEnemy(Vector3 enemy)
@@ -344,8 +265,8 @@ public partial class NavAgent
         this.targetDistance = distance;
         this.targetDistanceSquare = distance * distance;
 
-        begin = actor.GetGlobalTransform().origin;
-        end = destination.GetGlobalTransform().origin;
+        begin = actor.GlobalTransform.Origin;
+        end = destination.GlobalTransform.Origin;
 
         //Logging.Log("NavAgent.SetDestination.begin: " + begin);
         //Logging.Log("NavAgent.SetDestination.end: " + end);
@@ -383,13 +304,13 @@ public partial class NavAgent
 
         checkDestinationPosition = checkDestinationPositionTreshold;
 
-        Vector3 newEnd = destination.GetGlobalTransform().origin;
+        Vector3 newEnd = destination.GlobalTransform.Origin;
         //Logging.Log("x: " + Math.Abs(newEnd.x - this.end.x));
         //Logging.Log("z: " + Math.Abs(newEnd.z - this.end.z));
-        if ( (Math.Abs(newEnd.x - this.end.x) + Math.Abs(newEnd.z - this.end.z)) > 4.0f )
+        if ( (Math.Abs(newEnd.X - this.end.X) + Math.Abs(newEnd.Z - this.end.Z)) > 4.0f )
         {
             countUpdateForTargetMovement++;
-            begin = this.actor.GetGlobalTransform().origin;
+            begin = this.actor.GlobalTransform.Origin;
             end = newEnd;
             updatePathToEncounteredEnemy(newEnd);
         }
@@ -416,11 +337,11 @@ public partial class NavAgent
         if (draw == null)
             return;
 
-        draw.Clear();
-        draw.Begin(Mesh.PrimitiveType.LineStrip, null);
-        draw.AddVertex(from);
-        draw.AddVertex(velocity);
-        draw.End();
+        draw.ClearSurfaces();
+        draw.SurfaceBegin(Mesh.PrimitiveType.LineStrip, null);
+        draw.SurfaceAddVertex(from);
+        draw.SurfaceAddVertex(velocity);
+        draw.SurfaceEnd();
 
     }
 }

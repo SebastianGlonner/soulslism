@@ -38,104 +38,104 @@ namespace Soulslism
 
         public void _input(InputEvent @event)
         {
-            InputAction action = InputAction.IDLE;
-            if (@event is InputEventMouseButton) {
+            //InputAction action = InputAction.IDLE;
+            //if (@event is InputEventMouseButton) {
 
-                int buttonIndex = ((InputEventMouseButton) @event).ButtonIndex;
-                if ( buttonIndex == (int)ButtonList.Left)
-                {
-                    action = InputAction.POINT_LEFT;
-                } 
-                else if (buttonIndex == (int)ButtonList.WheelDown)
-                {
-                    action = InputAction.ZOOM_OUT;
-                } 
-                else if (buttonIndex == (int)ButtonList.WheelUp)
-                {
-                    action = InputAction.ZOOM_IN;
-                } 
-                else if (buttonIndex == (int)ButtonList.Right) 
-                {
-                    action = InputAction.POINT_RIGHT;
-                }
+            //    int buttonIndex = ((InputEventMouseButton) @event).ButtonIndex;
+            //    if ( buttonIndex == (int)ButtonList.Left)
+            //    {
+            //        action = InputAction.POINT_LEFT;
+            //    } 
+            //    else if (buttonIndex == (int)ButtonList.WheelDown)
+            //    {
+            //        action = InputAction.ZOOM_OUT;
+            //    } 
+            //    else if (buttonIndex == (int)ButtonList.WheelUp)
+            //    {
+            //        action = InputAction.ZOOM_IN;
+            //    } 
+            //    else if (buttonIndex == (int)ButtonList.Right) 
+            //    {
+            //        action = InputAction.POINT_RIGHT;
+            //    }
 
-            } else if (@event is InputEventMouseMotion ) 
-            {
-                action = InputAction.POINT_MOVE;
-            }
+            //} else if (@event is InputEventMouseMotion ) 
+            //{
+            //    action = InputAction.POINT_MOVE;
+            //}
             
-            if ( action != InputAction.IDLE )
-                machine.processInput(action, @event);
+            //if ( action != InputAction.IDLE )
+            //    machine.processInput(action, @event);
 
         }
-        public void _input2(InputEvent @event)
-        {
-            Boolean doMove = false;
-            moveCamera.x = 0;
-            moveCamera.y = 0;
-            moveCamera.z = 0;
+        //public void _input2(InputEvent @event)
+        //{
+        //    Boolean doMove = false;
+        //    moveCamera.x = 0;
+        //    moveCamera.y = 0;
+        //    moveCamera.z = 0;
             
-            if (@event is InputEventMouseButton)
-            {
-                InputEventMouseButton mouseEvent = (InputEventMouseButton)@event;
-                if ( mouseEvent.ButtonIndex == (int)ButtonList.Left)
-                {
-                    if ( !mouseEvent.Pressed ) {
-                        Vector3 rayFrom = camera.ProjectRayOrigin(mouseEvent.Position);
-                        Vector3 rayTo = rayFrom + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
+        //    if (@event is InputEventMouseButton)
+        //    {
+        //        InputEventMouseButton mouseEvent = (InputEventMouseButton)@event;
+        //        if ( mouseEvent.ButtonIndex == (int)ButtonList.Left)
+        //        {
+        //            if ( !mouseEvent.Pressed ) {
+        //                Vector3 rayFrom = camera.ProjectRayOrigin(mouseEvent.Position);
+        //                Vector3 rayTo = rayFrom + camera.ProjectRayNormal(mouseEvent.Position) * 1000;
 
-                        Godot.Collections.Dictionary selection = camera.GetWorld3d().DirectSpaceState.IntersectRay(rayFrom, rayTo);
-                        object collided = selection["collider"];
-                        if ( collided != null ) {
-                            GD.Print(collided);
-                        }
-                    }
+        //                Godot.Collections.Dictionary selection = camera.GetWorld3d().DirectSpaceState.IntersectRay(rayFrom, rayTo);
+        //                object collided = selection["collider"];
+        //                if ( collided != null ) {
+        //                    GD.Print(collided);
+        //                }
+        //            }
                     
-                    if ( !rotating )
-                    {
-                        if ( !dragging && mouseEvent.Pressed ) {
-                            dragging = true;
-                        } else if ( dragging && !mouseEvent.Pressed) {
-                            dragging = false;
-                        }
-                    }
+        //            if ( !rotating )
+        //            {
+        //                if ( !dragging && mouseEvent.Pressed ) {
+        //                    dragging = true;
+        //                } else if ( dragging && !mouseEvent.Pressed) {
+        //                    dragging = false;
+        //                }
+        //            }
 
-                } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelDown)
-                {
-                    moveCamera.y = zoomSpeed * -1;
-                    doMove = true;
+        //        } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelDown)
+        //        {
+        //            moveCamera.y = zoomSpeed * -1;
+        //            doMove = true;
 
-                } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelUp)
-                {
-                    moveCamera.y = zoomSpeed;
-                    doMove = true;
+        //        } else if (mouseEvent.ButtonIndex == (int)ButtonList.WheelUp)
+        //        {
+        //            moveCamera.y = zoomSpeed;
+        //            doMove = true;
 
-                } else if ( !dragging && mouseEvent.ButtonIndex == (int)ButtonList.Right ) {
-                    if ( !rotating && mouseEvent.Pressed ) {
-                        rotating = true;
-                    } else if ( rotating && !mouseEvent.Pressed) {
-                        rotating = false;
-                    }
+        //        } else if ( !dragging && mouseEvent.ButtonIndex == (int)ButtonList.Right ) {
+        //            if ( !rotating && mouseEvent.Pressed ) {
+        //                rotating = true;
+        //            } else if ( rotating && !mouseEvent.Pressed) {
+        //                rotating = false;
+        //            }
 
-                }
-            } else if (@event is InputEventMouseMotion && (dragging || rotating) ) {
-                Vector2 mouseRelative = ((InputEventMouseMotion)@event).Relative;
-                moveCamera.x = mouseRelative.x;
-                moveCamera.z = mouseRelative.y;
+        //        }
+        //    } else if (@event is InputEventMouseMotion && (dragging || rotating) ) {
+        //        Vector2 mouseRelative = ((InputEventMouseMotion)@event).Relative;
+        //        moveCamera.x = mouseRelative.x;
+        //        moveCamera.z = mouseRelative.y;
 
-            }
+        //    }
             
 
-            if ( rotating ) {
-                rotationHelperX.RotateX(Mathf.DegToRad(moveCamera.z * mouseSpeed * -1));
-                Orthonormalize(rotationHelperX);
-            }
+        //    if ( rotating ) {
+        //        rotationHelperX.RotateX(Mathf.DegToRad(moveCamera.z * mouseSpeed * -1));
+        //        Orthonormalize(rotationHelperX);
+        //    }
             
-            if ( dragging || doMove ) {
-                rotationHelperX.GlobalTranslate(moveCamera * dragDirection * dragSpeed);
-            }
+        //    if ( dragging || doMove ) {
+        //        rotationHelperX.GlobalTranslate(moveCamera * dragDirection * dragSpeed);
+        //    }
 
-        }
+        //}
 
         // public void _input(InputEvent @event)
         // {
@@ -164,10 +164,10 @@ namespace Soulslism
 
         // }
 
-        private void Orthonormalize(Node3D node) {
-            node.SetTransform(node.GetTransform().Orthonormalized());
+        //private void Orthonormalize(Node3D node) {
+        //    node.SetTransform(node.GetTransform().Orthonormalized());
 
-        }
+        //}
 
     }
 }

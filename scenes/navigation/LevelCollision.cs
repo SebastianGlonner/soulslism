@@ -6,7 +6,7 @@ public partial class LevelCollision : Node3D
 
     private Camera3D camera;
 
-    private Navigation navigationNode;
+    //private Navigation navigationNode;
 
     private PackedScene minionScene;
     private Actor enemyCastle;
@@ -17,10 +17,10 @@ public partial class LevelCollision : Node3D
 
     public override void _Ready()
     {
-        drawPathMaterial = new StandardMaterial3D();
-        drawPathMaterial.FlagsUnshaded = true;
-        drawPathMaterial.FlagsUsePointSize = true;
-        drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
+        //drawPathMaterial = new StandardMaterial3D();
+        //drawPathMaterial.FlagsUnshaded = true;
+        //drawPathMaterial.FlagsUsePointSize = true;
+        //drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
 
         minionScene = (PackedScene)ResourceLoader.Load("res://scenes/Actor.tscn");
         SetProcessInput(true);
@@ -28,7 +28,6 @@ public partial class LevelCollision : Node3D
         camera = GetNode("/root/Level/Camera3D") as Camera3D;
         enemyCastle = GetNode("EnemyCastle") as Actor;
         enemyCastle.SetTotalLife(60000);
-        navigationNode = GetNode("Navigation") as Navigation;
 
         int countPerSide = 50;
 
@@ -79,21 +78,21 @@ public partial class LevelCollision : Node3D
 
     private void DeployMinion(Vector3 at, bool withTarget, bool drawPath = false)
     {
-        Actor player = minionScene.Instance() as Actor;
+        Actor player = minionScene.Instantiate() as Actor;
         AddChild(player);
 
         player.GlobalTranslate(at);
         player.SetTotalLife(15);
 
         ImmediateMesh draw = null;
-        if (drawPath)
-        {
-            draw = new ImmediateMesh();
-            draw.SetMaterialOverride(drawPathMaterial);
-            AddChild(draw);
-        }
+        //if (drawPath)
+        //{
+        //    draw = new ImmediateMesh();
+        //    draw.SetMaterialOverride(drawPathMaterial);
+        //    AddChild(draw);
+        //}
 
-        player.Agent = new NavAgent(navigationNode, player, draw);
+        player.Agent = new NavAgent(GetWorld3D(), player, draw);
 
         if ( withTarget )
             player.AddTarget(new AiTarget(enemyCastle, 1));
@@ -102,12 +101,12 @@ public partial class LevelCollision : Node3D
 
     private void DeployEnemy(Vector3 pos, bool withTarget, bool drawPath = false)
     {
-        Actor actor = minionScene.Instance() as Actor;
+        Actor actor = minionScene.Instantiate() as Actor;
         AddChild(actor);
         actor.Faction = Soulslism.Faction.Enemy;
 
         actor.GlobalTranslate(pos);
-        actor.Agent = new NavAgent(navigationNode, actor);
+        actor.Agent = new NavAgent(GetWorld3D(), actor);
         actor.SetTotalLife(5);
     }
 

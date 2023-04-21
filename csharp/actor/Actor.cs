@@ -5,7 +5,7 @@ using Soulslism;
 public partial class Actor : CharacterBody3D
 {
 	public float attackRange = 4f;
-	public float attackSpeed = .8f;
+	public double attackSpeed = .8f;
 	public int totalLife = 5;
 	public int damagePerAttack = 1;
 
@@ -21,7 +21,7 @@ public partial class Actor : CharacterBody3D
 	private Vector3 currentDestination;
 
 	private Actor otherAi;
-	private float nextAttack = 0;
+	private double nextAttack = 0;
 
 	private AiActionCollection actionCollection;
 
@@ -62,7 +62,15 @@ public partial class Actor : CharacterBody3D
 		sonar = GetNode("Sonar") as Area3D;
 		sonar.Connect("body_entered",new Callable(this,"OnTriggerEnter"));
 		AddCollisionExceptionWith(this);
+		
+	}
 
+	public NavigationAgent3D NavigationAgent
+	{
+		get
+		{
+			return GetNode("NavigationAgent3D") as NavigationAgent3D;
+		}
 	}
 
 	private void ToggleMovementNotification(int movementListenerCount)
@@ -76,7 +84,7 @@ public partial class Actor : CharacterBody3D
 		if (what == Node3D.NotificationTransformChanged)
 		{
 			this.eventMoving.Trigger(this);
-		} else if ( what == Godot.Object.NotificationPredelete )
+		} else if ( what == GodotObject.NotificationPredelete )
 		{
 			// Logging.Log("_notification: NotificationPredelete");
 			// OnQueueFree();
@@ -90,9 +98,9 @@ public partial class Actor : CharacterBody3D
 		}
 	}
 
-	public override void _Process(float delta)
-	{
-		if (agent == null)
+	public override void _Process(double delta)
+    {
+        if (agent == null)
 			return;
 
 		if ( nextAttack > 0 )
@@ -106,9 +114,9 @@ public partial class Actor : CharacterBody3D
 
 	}
 
-	private float physicsTargetRemainingDistance = .1f;
+	private double physicsTargetRemainingDistance = .1f;
 
-	public override void _PhysicsProcess(float delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		if (agent != null)
 			physicsTargetRemainingDistance = agent.Process(delta);
@@ -144,7 +152,7 @@ public partial class Actor : CharacterBody3D
 		{
 
 			this.currentTarget = newTarget;
-			this.currentDestination = newTarget.GetTarget().GetGlobalTransform().origin;
+			this.currentDestination = newTarget.GetTarget().GlobalTransform.Origin;
 			//this.otherAi = newTarget.Target;
 			agent.SetDestination(newTarget.GetTarget(), attackRange);
 		}
@@ -184,7 +192,7 @@ public partial class Actor : CharacterBody3D
 
 	private void AttackTarget(Actor other)
 	{
-		   ProfilingCollection.add("attackTarget");
+		// g35 ProfilingCollection.add("attackTarget");
 		other.ReceiveAttack(this.damagePerAttack);
 		nextAttack = attackSpeed;
 	}
@@ -236,7 +244,7 @@ public partial class Actor : CharacterBody3D
 
 			if ( faction == Soulslism.Faction.Enemy )
 			{
-				meshInstance.SetMaterialOverride(Soulslism.MaterialsManager.Get(Soulslism.MaterialsManager.Material.ENEMY_BODY));
+				meshInstance.MaterialOverride = Soulslism.MaterialsManager.Get(Soulslism.MaterialsManager.Material.ENEMY_BODY);
 			}
 		}
 		get

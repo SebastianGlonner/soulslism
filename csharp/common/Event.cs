@@ -4,12 +4,12 @@ using System.Threading;
 
 namespace Soulslism
 {
-    public partial class EventManaged<T>
+    public class EventManaged<T>
     {
-        private struct EventMemoryPair<T>
+        private struct EventMemoryPair<Z>
         {
             public uint attachedId;
-            public Event<T> eventHandler;
+            public Event<Z> eventHandler;
         }
 
         private Dictionary<uint, EventMemoryPair<T>> attachedEvents = new Dictionary<uint, EventMemoryPair<T>>();
@@ -53,7 +53,7 @@ namespace Soulslism
         }
     }
 
-    public partial class Event<T>
+    public class Event<T>
     {
         static private uint staticUniqueId = 0;
         static private uint GetUniqueId()
@@ -125,7 +125,7 @@ namespace Soulslism
         }
     }
 
-    public partial class EventObservable<T> : Event<T>
+    public class EventObservable<T> : Event<T>
     {
         public Event<int> eventAdd = new Event<int>();
         public Event<int> eventRemove = new Event<int>();

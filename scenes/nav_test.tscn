@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8l4nwxy243uo"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_nkqyu"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1s5gn"]
+size = Vector2(10, 10)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = SubResource("NavigationMesh_nkqyu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D"]
+mesh = SubResource("PlaneMesh_1s5gn")

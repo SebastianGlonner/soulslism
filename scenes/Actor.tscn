@@ -1,40 +1,41 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://dgeaq3gh6r2oj"]
 
-[ext_resource path="res://csharp/actor/Actor.cs" type="Script" id=1]
-[ext_resource path="res://materials/MinionFriend.tres" type="Material" id=2]
-[ext_resource path="res://scenes/LifeLine.tscn" type="PackedScene" id=3]
+[ext_resource type="Script" path="res://csharp/actor/Actor.cs" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/LifeLine.tscn" id="3"]
 
-[sub_resource type="CapsuleShape3D" id=1]
-radius = 1.2
-height = 2.0
+[sub_resource type="CapsuleShape3D" id="1"]
+radius = 1.0
+height = 6.0
 
-[sub_resource type="CylinderMesh" id=2]
+[sub_resource type="CylinderMesh" id="2"]
 
-[sub_resource type="SphereShape3D" id=3]
+[sub_resource type="SphereShape3D" id="3"]
 radius = 18.0
 
 [node name="Minion" type="CharacterBody3D"]
 collision_layer = 5
-script = ExtResource( 1 )
+script = ExtResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2.12069, 0 )
-shape = SubResource( 1 )
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.07705, 0)
+shape = SubResource("1")
 
 [node name="Body" type="Node3D" parent="."]
-transform = Transform3D( 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 2, 0 )
+transform = Transform3D(1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Body"]
-mesh = SubResource( 2 )
-material/0 = ExtResource( 2 )
+layers = 5
+mesh = SubResource("2")
 
-[node name="LifeLine" parent="." instance=ExtResource( 3 )]
-transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+[node name="LifeLine" parent="." instance=ExtResource("3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 
 [node name="Sonar" type="Area3D" parent="."]
-input_ray_pickable = false
 collision_layer = 0
 collision_mask = 4
+input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Sonar"]
-shape = SubResource( 3 )
+shape = SubResource("3")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]

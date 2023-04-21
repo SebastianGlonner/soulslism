@@ -5,7 +5,7 @@ public partial class LevelHelper
 {
     private Camera3D camera;
     private Node3D cameraRotationHelperX;
-    private Navigation navigationNode;
+    // g35 private Navigation navigationNode;
 
     private PackedScene minionScene;
     private Actor enemyCastle;
@@ -20,10 +20,10 @@ public partial class LevelHelper
     {
         this.rootNode = node;
 
-        drawPathMaterial = new StandardMaterial3D();
-        drawPathMaterial.FlagsUnshaded = true;
-        drawPathMaterial.FlagsUsePointSize = true;
-        drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
+        //drawPathMaterial = new StandardMaterial3D();
+        //drawPathMaterial.FlagsUnshaded = true;
+        //drawPathMaterial.FlagsUsePointSize = true;
+        //drawPathMaterial.AlbedoColor = new Color(1, 1, 1);
 
         minionScene = (PackedScene)ResourceLoader.Load("res://scenes/Actor.tscn");
 
@@ -33,18 +33,18 @@ public partial class LevelHelper
         // setup initial camera position
         cameraRotationHelperX.RotateX(Mathf.DegToRad(-65));
         Vector3 camerInitialPosition = new Vector3();
-        camerInitialPosition.y = 70;
-        camerInitialPosition.z = 40;
+        camerInitialPosition.Y = 70;
+        camerInitialPosition.Z = 40;
         cameraRotationHelperX.GlobalTranslate(camerInitialPosition);
 
-        Transform3D cameraTransform = camera.GetTransform();
-        cameraTransform.origin = Vector3.Zero;
-        camera.SetTransform(cameraTransform);
+        Transform3D cameraTransform = camera.Transform;
+        cameraTransform.Origin = Vector3.Zero;
+        camera.Transform = cameraTransform;
 
         enemyCastle = node.GetNode("EnemyCastle") as Actor;
         enemyCastle.SetTotalLife(60000);
         enemyCastle.Faction = Soulslism.Faction.Enemy;
-        navigationNode = node.GetNode("Navigation") as Navigation;
+        // g35 navigationNode = node.GetNode("Navigation") as Navigation;
     }
 
     public Camera3D getPlayerCamera()
@@ -86,7 +86,7 @@ public partial class LevelHelper
 
     public void DeployMinion(Vector3 at, bool withTarget = false, bool drawPath = false)
     {
-        Actor player = minionScene.Instance() as Actor;
+        Actor player = minionScene.Instantiate() as Actor;
         player.SetProcess(false);
         player.SetPhysicsProcess(false);
         this.rootNode.AddChild(player);
@@ -95,28 +95,28 @@ public partial class LevelHelper
         player.SetTotalLife(15);
 
         ImmediateMesh draw = null;
-        if (drawPath)
-        {
-            draw = new ImmediateMesh();
-            draw.SetMaterialOverride(drawPathMaterial);
-            this.rootNode.AddChild(draw);
-        }
+        //if (drawPath)
+        //{
+        //    draw = new ImmediateMesh();
+        //    draw.SurfaceSetMaterial(0, drawPathMaterial);
+        //    this.rootNode.AddChild(draw);
+        //}
 
-        player.Agent = new NavAgent(navigationNode, player, draw);
+        player.Agent = new NavAgent(rootNode.GetWorld3D(), player, draw);
         player.AddTarget(new AiTarget(enemyCastle, 1));
 
     }
 
     public void DeployEnemy(Vector3 pos, bool withTarget = false, bool drawPath = false)
     {
-        Actor actor = minionScene.Instance() as Actor;
+        Actor actor = minionScene.Instantiate() as Actor;
         actor.SetProcess(false);
         actor.SetPhysicsProcess(false);
         this.rootNode.AddChild(actor);
         actor.Faction = Soulslism.Faction.Enemy;
 
         actor.GlobalTranslate(pos);
-        actor.Agent = new NavAgent(navigationNode, actor);
+        actor.Agent = new NavAgent(rootNode.GetWorld3D(), actor);
         actor.SetTotalLife(5);
     }
 }

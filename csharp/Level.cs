@@ -7,6 +7,9 @@ public partial class Level : Node3D
 	private LevelHelper levelHelper;
 	private GameController cameraController;
 
+	private double wait = 0;
+	private bool done = false;
+
 	public override void _Ready()
 	{
 		this.levelHelper = new LevelHelper();
@@ -17,11 +20,27 @@ public partial class Level : Node3D
 			levelHelper.getPlayerCameraRotationHelperX()
 		);
 
-		setUpSmall();
-		// setUpHuge();
+		//setUpSmall();
+		//setUpHuge();
 	}
 
-	private void setUpSmall()
+    public override void _Process(double delta)
+    {
+		if ( done)
+		{
+			return;
+		}
+
+		this.wait += delta;
+		if ( wait > 1)
+        {
+			done = true;
+            setUpHuge();
+        }
+
+    }
+
+    private void setUpSmall()
 	{
 		SetProcessInput(true);
 

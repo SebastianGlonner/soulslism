@@ -17,20 +17,20 @@ func _ready():
 #	pass
 
 func _input(event):
-	if event is InputEventMouseButton and event.pressed and event.button_index == 1:
-		var camera = $Camera3D
-		var from = camera.project_ray_origin(event.position)
-		print("from ", from);
-		var to = from + camera.project_ray_normal(event.position) * ray_length
-		print("to ", to);
-		
-		var space_state = get_world_3d().direct_space_state
-		# use global coordinates, not local to node
-		var result = space_state.intersect_ray(from, to).position
-		
-		print(result)
-		var dir = result - $Target.global_transform.origin
-		print(dir)
-		
-		$Target.global_translate(dir)
-		
+#	if event is InputEventMouseButton and event.pressed and event.button_index == 1:
+#		var camera = $Camera3D
+#		var from = camera.project_ray_origin(event.position)
+#		print("from ", from);
+#		var to = from + camera.project_ray_normal(event.position) * ray_length
+#		print("to ", to);
+#
+#		var space_state = get_world_3d().direct_space_state
+#		# use global coordinates, not local to node
+#		var result = space_state.intersect_ray(from, to).position
+#
+#		print(result)
+#		var dir = result - $Target.global_transform.origin
+#		print(dir)
+#
+#		$Target.global_translate(dir)
+	pass

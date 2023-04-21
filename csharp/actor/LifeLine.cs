@@ -11,13 +11,13 @@ public partial class LifeLine : Node3D {
     public override void _Ready()
     {
         lineToScale = GetNode("Life") as Node3D;
-        maxScaleY = lineToScale.GetScale().y;
+        maxScaleY = lineToScale.Scale.Y;
     }
 
     public void SetLife(int percentLife)
     {
         actualScaleY = (percentLife * maxScaleY) / 100;
-        localScale = lineToScale.GetScale();
-        lineToScale.SetScale(new Vector3(localScale.x, actualScaleY, localScale.z));
+        localScale = lineToScale.Scale;
+        lineToScale.Scale = new Vector3(localScale.X, actualScaleY, localScale.Z);
     }
 }
