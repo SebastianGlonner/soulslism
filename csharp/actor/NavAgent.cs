@@ -91,10 +91,18 @@ public partial class NavAgent
 
             desiredVelocity = (targetPointWorld - actorOrigin).Normalized() * (SPEED);
             directedVelocity = desiredVelocity - actorVelocity;
-            actor.LookAt(actorOrigin + directedVelocity, upVector);
+            Vector3 targetLookAt = actorOrigin + directedVelocity;
+            if (!actorOrigin.IsEqualApprox(targetLookAt))
+            {
+                targetLookAt.Y = 0;
+                actor.LookAt(targetLookAt, upVector);
+            }
 
-            actor.Velocity = desiredVelocity;
-            actor.MoveAndSlide();
+            // !! move and slide
+            //actor.Velocity = desiredVelocity;
+            //actor.MoveAndSlide();
+            // !! move and collide
+            actor.MoveAndCollide(desiredVelocity * (float)delta);
 
             remainingDistance = (float)Math.Sqrt(actorOrigin.DistanceSquaredTo(targetPointWorld));
             return remainingDistance;

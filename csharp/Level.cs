@@ -19,13 +19,10 @@ public partial class Level : Node3D
 			levelHelper.getPlayerCamera(),
 			levelHelper.getPlayerCameraRotationHelperX()
 		);
-
-		//setUpSmall();
-		//setUpHuge();
 	}
 
-    public override void _Process(double delta)
-    {
+	public override void _Process(double delta)
+	{
 		if ( done)
 		{
 			return;
@@ -33,14 +30,14 @@ public partial class Level : Node3D
 
 		this.wait += delta;
 		if ( wait > 1)
-        {
+		{
 			done = true;
-            setUpHuge();
-        }
+			setUpHuge();
+		}
 
-    }
+	}
 
-    private void setUpSmall()
+	private void setUpSmall()
 	{
 		SetProcessInput(true);
 

@@ -99,8 +99,8 @@ public partial class Actor : CharacterBody3D
 	}
 
 	public override void _Process(double delta)
-    {
-        if (agent == null)
+	{
+		if (agent == null)
 			return;
 
 		if ( nextAttack > 0 )

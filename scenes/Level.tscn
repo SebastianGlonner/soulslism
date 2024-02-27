@@ -21,18 +21,19 @@ script = ExtResource("1")
 environment = ExtResource("2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.306886, 0.606721, -0.733288, 0.0305039, 0.77634, 0.629576, 0.951257, 0.17084, -0.256755, -22.4581, 15.8429, -6.27021)
+transform = Transform3D(-0.306886, 0.606721, -0.733288, 0.0305039, 0.77634, 0.629576, 0.951257, 0.17084, -0.256755, -24.0765, 20.8965, -6.27021)
 shadow_enabled = true
 
 [node name="Navigation" type="Node3D" parent="."]
 
-[node name="Control" type="Control" parent="."]
+[node name="FPS" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Label" type="Label" parent="Control"]
+[node name="Label" type="Label" parent="FPS"]
 layout_mode = 0
 offset_right = 220.0
 offset_bottom = 51.0

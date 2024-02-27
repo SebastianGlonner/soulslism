@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/efesus_profiler/csharp/ValuesViewerContainer.cs" type="Script" id=1]
+[ext_resource path="res://addons/efesus_profiler/csharp/graph/GraphBuilder.cs" type="Script" id=2]
+[ext_resource path="res://addons/efesus_profiler/csharp/graph/ProfilerMetricsViewerGraph.cs" type="Script" id=3]
+[ext_resource path="res://addons/efesus_profiler/csharp/graph/LegendY.cs" type="Script" id=4]
+
+[node name="ProfilerMetricsViewer" type="Control"]
+margin_right = 150.0
+margin_bottom = 104.0
+
+[node name="Columns" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -142.0
+margin_bottom = -400.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MetricsGrid" type="GridContainer" parent="Columns"]
+columns = 2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GraphParent" type="HBoxContainer" parent="Columns"]
+margin_right = 4.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LegendY" type="Control" parent="Columns/GraphParent"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource( 4 )
+
+[node name="ScrollGraph" type="ScrollContainer" parent="Columns/GraphParent"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProfilerMetricsViewerGraph" type="ColorRect" parent="Columns/GraphParent/ScrollGraph"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 0.305882 )
+script = ExtResource( 3 )

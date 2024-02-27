@@ -15,10 +15,23 @@ run/main_scene="res://scenes/Level.tscn"
 config/features=PackedStringArray("4.0", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
+EfesusProfiler="*res://addons/efesus_profiler/ProfilerMetricsViewer.tscn"
+
 [dotnet]
 
 project/assembly_name="Soulslism"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/efesus_profiler/plugin.cfg")
+
 [rendering]
 
 renderer/rendering_method="mobile"
+
+[threading]
+
+worker_pool/defaults/default_clear_color=Color(1, 1, 1, 1)

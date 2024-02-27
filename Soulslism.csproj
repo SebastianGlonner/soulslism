@@ -3,4 +3,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MethodDecorator.Fody">
+      <Version>1.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
 </Project>
